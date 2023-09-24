@@ -1,1 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <numeric>
 
+struct Student {
+    std::string name;
+    std::string surname;
+    std::vector<int> homeworkResults;
+    int examResult;
+};
+
+double computeMean(const Student &student) {
+    double homeworkMean = 0;
+    if (!student.homeworkResults.empty()) {
+        homeworkMean = std::accumulate(student.homeworkResults.begin(),
+                                       student.homeworkResults.end(), 0.0) /
+                       student.homeworkResults.size();
+    }
+    return 0.4 * homeworkMean + 0.6 * student.examResult;
+}
+
+int main() {
+    int numStudents;
+    std::cout << "Enter the number of students: ";
+    std::cin >> numStudents;
+
+    std::vector<Student> students(numStudents);
+
+    for (int i = 0; i < numStudents; ++i) {
+        std::cout << "Enter name for student " << (i + 1) << ": ";
+        std::cin >> students[i].name;
+        
+        std::cout << "Enter surname for student " << (i + 1) << ": ";
+        std::cin >> students[i].surname;
+
+        int numHomeworks;
+        std::cout << "Enter number of homework results for student " << (i + 1) << ": ";
+        std::cin >> numHomeworks;
+
+        for (int j = 0; j < numHomeworks; ++j) {
+            int result;
+            std::cout << "Enter result for homework " << (j + 1) << ": ";
+            std::cin >> result;
+            students[i].homeworkResults.push_back(result);
+        }
+
+        std::cout << "Enter exam result for student " << (i + 1) << ": ";
+        std::cin >> students[i].examResult;
+    }
+
+    for (const auto &student : students) {
+        std::cout << student.name << " " << student.surname << ": Final Mean = "
+                  << computeMean(student) << std::endl;
+    }
+
+    return 0;
+}
