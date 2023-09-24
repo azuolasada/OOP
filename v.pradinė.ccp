@@ -3,6 +3,7 @@
 #include <numeric>
 #include <iomanip>
 #include <algorithm>
+#include <sstream>
 
 struct Student {
     std::string name;
@@ -39,33 +40,42 @@ int main() {
     int numStudents;
     std::cout << "Enter the number of students: ";
     std::cin >> numStudents;
+    std::cin.ignore(); // to consume newline left after reading numStudents
 
-    std::vector<Student> students(numStudents);
+    std::vector<Student> students;
     char calculationMethod;
 
     std::cout << "Choose calculation method (m for mean, d for median): ";
     std::cin >> calculationMethod;
+    std::cin.ignore();
 
     for (int i = 0; i < numStudents; ++i) {
+        Student student;
+
         std::cout << "Enter name for student " << (i + 1) << ": ";
-        std::cin >> students[i].name;
-        
+        std::getline(std::cin, student.name);
+
         std::cout << "Enter surname for student " << (i + 1) << ": ";
-        std::cin >> students[i].surname;
+        std::getline(std::cin, student.surname);
 
-        int numHomeworks;
-        std::cout << "Enter number of homework results for student " << (i + 1) << ": ";
-        std::cin >> numHomeworks;
-
-        for (int j = 0; j < numHomeworks; ++j) {
+        std::cout << "Enter homework results for student " << (i + 1) << " (press Enter twice to stop):\n";
+        while (true) {
+            std::string line;
+            std::getline(std::cin, line);
+            if (line.empty()) {
+                break; // Exit the loop when two ENTERs are pressed
+            }
+            std::istringstream iss(line);
             int result;
-            std::cout << "Enter result for homework " << (j + 1) << ": ";
-            std::cin >> result;
-            students[i].homeworkResults.push_back(result);
+            iss >> result;
+            student.homeworkResults.push_back(result);
         }
 
         std::cout << "Enter exam result for student " << (i + 1) << ": ";
-        std::cin >> students[i].examResult;
+        std::cin >> student.examResult;
+        std::cin.ignore();
+
+        students.push_back(student);
     }
 
     printDataFrameHeader();
