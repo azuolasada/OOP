@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <algorithm>
 #include <sstream>
+#include <random>
+#include <ctime>
 
 struct Student {
     std::string name;
@@ -36,6 +38,12 @@ void printDataFrameHeader() {
     std::cout << std::string(45, '-') << std::endl;
 }
 
+int generateRandomScore(int min, int max) {
+    static std::mt19937 rng(std::time(nullptr));  // Random number generator
+    std::uniform_int_distribution<int> dist(min, max);
+    return dist(rng);
+}
+
 int main() {
     int numStudents;
     std::cout << "Enter the number of students: ";
@@ -44,9 +52,14 @@ int main() {
 
     std::vector<Student> students;
     char calculationMethod;
+    char inputMethod;
 
     std::cout << "Choose calculation method (m for mean, d for median): ";
     std::cin >> calculationMethod;
+    std::cin.ignore();
+
+    std::cout << "Do you want to input scores manually or generate them randomly? (i for input, r for random): ";
+    std::cin >> inputMethod;
     std::cin.ignore();
 
     for (int i = 0; i < numStudents; ++i) {
@@ -58,22 +71,32 @@ int main() {
         std::cout << "Enter surname for student " << (i + 1) << ": ";
         std::getline(std::cin, student.surname);
 
-        std::cout << "Enter homework results for student " << (i + 1) << " (press Enter twice to stop):\n";
-        while (true) {
-            std::string line;
-            std::getline(std::cin, line);
-            if (line.empty()) {
-                break; // Exit the loop when two ENTERs are pressed
+        if (inputMethod == 'i') {
+            std::cout << "Enter homework results for student " << (i + 1) << " (press Enter twice to stop):\n";
+            while (true) {
+                std::string line;
+                std::getline(std::cin, line);
+                if (line.empty()) {
+                    break; // Exit the loop when two ENTERs are pressed
+                }
+                std::istringstream iss(line);
+                int result;
+                iss >> result;
+                student.homeworkResults.push_back(result);
             }
-            std::istringstream iss(line);
-            int result;
-            iss >> result;
-            student.homeworkResults.push_back(result);
-        }
 
-        std::cout << "Enter exam result for student " << (i + 1) << ": ";
-        std::cin >> student.examResult;
-        std::cin.ignore();
+            std::cout << "Enter exam result for student " << (i + 1) << ": ";
+            std::cin >> student.examResult;
+            std::cin.ignore();
+        } else if (inputMethod == 'r') {
+            int numHomeworks = generateRandomScore(3, 10); // Let's say a student can have between 3 to 10 homeworks.
+            for (int j = 0; j < numHomeworks; ++j) {
+                student.homeworkResults.push_back(generateRandomScore(1, 10)); // Random scores between 1 to 10
+            }
+
+            student.examResult = generateRandomScore(1, 10);  // Random scores between 1 to 10
+            std::cout << "Generated random scores for " << student.name << " " << student.surname << std::endl;
+        }
 
         students.push_back(student);
     }
