@@ -14,10 +14,12 @@ struct Student {
     int examResult;
 };
 
+// Function to compute the mean of a vector of integers
 double computeMean(const std::vector<int>& results) {
     return std::accumulate(results.begin(), results.end(), 0.0) / results.size();
 }
 
+// Function to compute the median of a vector of integers
 double computeMedian(const std::vector<int>& results) {
     size_t size = results.size();
     std::vector<int> sortedResults = results;
@@ -30,6 +32,7 @@ double computeMedian(const std::vector<int>& results) {
     }
 }
 
+// Function to print the header for our "DataFrame"
 void printDataFrameHeader() {
     std::cout << std::left << std::setw(15) << "Name"
               << std::setw(15) << "Surname"
@@ -38,6 +41,7 @@ void printDataFrameHeader() {
     std::cout << std::string(45, '-') << std::endl;
 }
 
+// Function to generate a random score within the given range
 int generateRandomScore(int min, int max) {
     static std::mt19937 rng(std::time(nullptr));  // Random number generator
     std::uniform_int_distribution<int> dist(min, max);
@@ -71,6 +75,7 @@ int main() {
         std::cout << "Enter surname for student " << (i + 1) << ": ";
         std::getline(std::cin, student.surname);
 
+        // Handle manual input of scores
         if (inputMethod == 'i') {
             std::cout << "Enter homework results for student " << (i + 1) << " (press Enter twice to stop):\n";
             while (true) {
@@ -88,8 +93,10 @@ int main() {
             std::cout << "Enter exam result for student " << (i + 1) << ": ";
             std::cin >> student.examResult;
             std::cin.ignore();
+
+        // Handle random generation of scores
         } else if (inputMethod == 'r') {
-            int numHomeworks = generateRandomScore(3, 10); // Let's say a student can have between 3 to 10 homeworks.
+            int numHomeworks = generateRandomScore(3, 10); // Generating random count of homeworks between 3 to 10
             for (int j = 0; j < numHomeworks; ++j) {
                 student.homeworkResults.push_back(generateRandomScore(1, 10)); // Random scores between 1 to 10
             }
@@ -101,6 +108,7 @@ int main() {
         students.push_back(student);
     }
 
+    // Print the final "DataFrame"
     printDataFrameHeader();
     for (const auto &student : students) {
         double homeworkScore = (calculationMethod == 'm' ? 
