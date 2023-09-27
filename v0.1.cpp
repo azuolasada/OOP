@@ -66,9 +66,13 @@ int main() {
         std::cin.ignore();
 
         if (inputMethod == 'f') {
-            std::ifstream file("kursiokai.txt");
+            std::string file_name;
+            std::cout << "Enter a file name: ";
+            std::cin >> file_name;
+            // std::string file_name = "test1.txt";
+            std::ifstream file(file_name);
             if (!file) {
-                throw std::runtime_error("Error opening file kursiokai.txt!");
+                throw std::runtime_error("Error opening file " + file_name + "!");
             }
 
             // Ignore header line
