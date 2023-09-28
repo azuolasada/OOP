@@ -16,6 +16,11 @@ int generateRandomScore(int min, int max) {
     return dist(rng);
 }
 
+// Validate score
+bool isValidScore(int score) {
+    return score >= 1 && score <= 10;
+}
+
 int main() {
     try {
         std::vector<Student> students;
@@ -46,7 +51,7 @@ int main() {
             }
 
             std::string header;
-            std::getline(file, header); // Ignore the header line
+            std::getline(file, header);
 
             while (file) {
                 Student student;
@@ -55,14 +60,16 @@ int main() {
 
                 for (int i = 0; i < 15; ++i) {
                     int score;
-                    if (!(file >> score)) {
-                        throw std::runtime_error("Error reading score from file!");
+                    if (!(file >> score) || !isValidScore(score)) {
+                        throw std::runtime_error("Error reading or invalid score from file! Scores should be between 1 and 10.");
                     }
                     student.homeworkResults.push_back(score);
                 }
-                if (!(file >> student.examResult)) {
-                    throw std::runtime_error("Error reading exam result from file!");
+                
+                if (!(file >> student.examResult) || !isValidScore(student.examResult)) {
+                    throw std::runtime_error("Error reading or invalid exam result from file! Scores should be between 1 and 10.");
                 }
+
                 students.push_back(student);
             }
         } else {
@@ -76,11 +83,18 @@ int main() {
 
             for (int i = 0; i < numStudents; ++i) {
                 Student student;
+                
                 std::cout << "Enter name for student " << (i + 1) << ": ";
                 std::getline(std::cin, student.name);
+                if (student.name.empty() || student.name.length() > 50) {
+                    throw std::runtime_error("Invalid student name. Ensure it's not empty and less than 50 characters.");
+                }
 
                 std::cout << "Enter surname for student " << (i + 1) << ": ";
                 std::getline(std::cin, student.surname);
+                if (student.surname.empty() || student.surname.length() > 50) {
+                    throw std::runtime_error("Invalid student surname. Ensure it's not empty and less than 50 characters.");
+                }
 
                 if (inputMethod == 'i') {
                     std::cout << "Enter homework results for student " << (i + 1) << " (press Enter twice to stop):\n";
@@ -93,18 +107,23 @@ int main() {
                         std::istringstream iss(line);
                         int result;
                         iss >> result;
+                        if (!isValidScore(result)) {
+                            throw std::runtime_error("Invalid score entered. Scores should be between 1 and 10.");
+                        }
                         student.homeworkResults.push_back(result);
                     }
 
                     std::cout << "Enter exam result for student " << (i + 1) << ": ";
                     std::cin >> student.examResult;
                     std::cin.ignore();
+                    if (!isValidScore(student.examResult)) {
+                        throw std::runtime_error("Invalid exam score entered. Scores should be between 1 and 10.");
+                    }
                 } else if (inputMethod == 'r') {
                     int numHomeworks = generateRandomScore(3, 15);
                     for (int j = 0; j < numHomeworks; ++j) {
                         student.homeworkResults.push_back(generateRandomScore(1, 10));
                     }
-
                     student.examResult = generateRandomScore(1, 10);
                 }
 
@@ -138,3 +157,4 @@ int main() {
 
     return 0;
 }
+
