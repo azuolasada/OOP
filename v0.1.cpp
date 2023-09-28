@@ -170,6 +170,12 @@ int main() {
             }
         }
 
+        std::sort(students.begin(), students.end(), [](const Student& a, const Student& b) {
+            if (a.name == b.name) {
+                return a.surname < b.surname;
+            }
+            return a.name < b.name;
+});
         // Print student results in tabular form
         printDataFrameHeader();
         for (const auto &student : students) {
