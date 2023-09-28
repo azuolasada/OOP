@@ -1,62 +1,27 @@
 #include <iostream>
 #include <vector>
-#include <numeric>
-#include <iomanip>
-#include <algorithm>
 #include <sstream>
 #include <random>
 #include <ctime>
 #include <fstream>
+#include <algorithm>
 
-// Define a structure to represent each student's details
-struct Student {
-    std::string name;
-    std::string surname;
-    std::vector<int> homeworkResults; // Store multiple homework scores
-    int examResult;
-};
+#include "student.h"
+#include "calculations.h"
+#include "input_output.h"
 
-// Function to calculate the mean of given results
-double computeMean(const std::vector<int>& results) {
-    return std::accumulate(results.begin(), results.end(), 0.0) / results.size();
-}
-
-// Function to calculate the median of given results
-double computeMedian(const std::vector<int>& results) {
-    size_t size = results.size();
-    std::vector<int> sortedResults = results; // Copy results for sorting
-    std::sort(sortedResults.begin(), sortedResults.end());
-
-    if (size % 2 == 0) {
-        return (sortedResults[size / 2 - 1] + sortedResults[size / 2]) / 2.0;
-    } else {
-        return sortedResults[size / 2];
-    }
-}
-
-// Function to display the header of the results table
-void printDataFrameHeader() {
-    std::cout << std::left << std::setw(15) << "Name"
-              << std::setw(15) << "Surname"
-              << std::setw(15) << "Final Score"
-              << std::endl;
-    std::cout << std::string(45, '-') << std::endl;
-}
-
-// Function to generate a random score within a range [min, max]
 int generateRandomScore(int min, int max) {
-    static std::mt19937 rng(std::time(nullptr));  // Random number generator seeded with current time
+    static std::mt19937 rng(std::time(nullptr));
     std::uniform_int_distribution<int> dist(min, max);
     return dist(rng);
 }
 
 int main() {
     try {
-        std::vector<Student> students; // Vector to store details of all students
+        std::vector<Student> students;
         char calculationMethod;
         char inputMethod;
 
-        // Prompt user for the method of score calculation (mean/median)
         std::cout << "Choose calculation method (m for mean, d for median): ";
         std::cin >> calculationMethod;
         if (calculationMethod != 'm' && calculationMethod != 'd') {
@@ -64,7 +29,6 @@ int main() {
         }
         std::cin.ignore();
 
-        // Prompt user for the method of input (manual/random/file)
         std::cout << "Choose input method (i for manual input, r for random, f for file): ";
         std::cin >> inputMethod;
         if (inputMethod != 'i' && inputMethod != 'r' && inputMethod != 'f') {
@@ -72,7 +36,6 @@ int main() {
         }
         std::cin.ignore();
 
-        // If the chosen input method is from a file
         if (inputMethod == 'f') {
             std::string file_name;
             std::cout << "Enter a file name: ";
@@ -82,19 +45,14 @@ int main() {
                 throw std::runtime_error("Error opening file " + file_name + "!");
             }
 
-            // Skipping the header line of the file
             std::string header;
-            std::getline(file, header);
+            std::getline(file, header); // Ignore the header line
 
-            // Read student details from file until end
             while (file) {
                 Student student;
                 file >> student.name >> student.surname;
-
-                // If EOF reached after reading name and surname, exit loop
                 if (file.eof()) break;
 
-                // Read homework scores and exam result from the file
                 for (int i = 0; i < 15; ++i) {
                     int score;
                     if (!(file >> score)) {
@@ -105,19 +63,9 @@ int main() {
                 if (!(file >> student.examResult)) {
                     throw std::runtime_error("Error reading exam result from file!");
                 }
-
-                // Check if student has any homework results, if not, skip calculations
-                if (student.homeworkResults.empty()) {
-                    std::cout << "No homework results for " << student.name << " " << student.surname << " in the file. It's not possible to do calculations." << std::endl;
-                    continue;
-                }
-
-                students.push_back(student); // Store student details in vector
+                students.push_back(student);
             }
         } else {
-            // For manual/random input, the procedure is similar to the previous version
-            // Prompt user for number of students and read their details appropriately
-            
             int numStudents;
             std::cout << "Enter the number of students: ";
             std::cin >> numStudents;
@@ -148,11 +96,6 @@ int main() {
                         student.homeworkResults.push_back(result);
                     }
 
-                    if (student.homeworkResults.empty()) {
-                        std::cout << "No homework results for " << student.name << " " << student.surname << ". It's not possible to do calculations." << std::endl;
-                        continue;
-                    }
-
                     std::cout << "Enter exam result for student " << (i + 1) << ": ";
                     std::cin >> student.examResult;
                     std::cin.ignore();
@@ -163,20 +106,20 @@ int main() {
                     }
 
                     student.examResult = generateRandomScore(1, 10);
-                    std::cout << "Generated random scores for " << student.name << " " << student.surname << std::endl;
                 }
 
-                students.push_back(student); // Store student details in vector
+                students.push_back(student);
             }
         }
 
+        // Sort the students by name and surname
         std::sort(students.begin(), students.end(), [](const Student& a, const Student& b) {
             if (a.name == b.name) {
                 return a.surname < b.surname;
             }
             return a.name < b.name;
-});
-        // Print student results in tabular form
+        });
+
         printDataFrameHeader();
         for (const auto &student : students) {
             double homeworkScore = (calculationMethod == 'm' ? 
@@ -189,13 +132,9 @@ int main() {
                       << std::endl;
         }
     } catch (const std::exception &e) {
-        // Exception handling: Print any error messages and exit with an error code
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
 
-    return 0; // Successful execution
+    return 0;
 }
-
-
-
