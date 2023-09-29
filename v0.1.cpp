@@ -5,6 +5,7 @@
 #include <ctime>
 #include <fstream>
 #include <algorithm>
+#include <iomanip>
 
 #include "student.h"
 #include "calculations.h"
@@ -48,22 +49,27 @@ int main() {
             while (file) {
                 Student student;
                 file >> student.name >> student.surname;
+
                 if (file.eof()) break;
 
-                for (int i = 0; i < 15; ++i) {
-                    int score;
-                    if (!(file >> score) || !isValidScore(score)) {
-                        throw std::runtime_error("Error reading or invalid score from file! Scores should be between 1 and 10.");
+                std::string scoreLine;
+                std::getline(file, scoreLine);
+                
+                std::istringstream iss(scoreLine);
+                int score;
+                while (iss >> score) {
+                    if (!isValidScore(score)) {
+                        throw std::runtime_error("Invalid score from file! Scores should be between 1 and 10.");
                     }
                     student.homeworkResults.push_back(score);
                 }
-                
-                if (!(file >> student.examResult) || !isValidScore(student.examResult)) {
-                    throw std::runtime_error("Error reading or invalid exam result from file! Scores should be between 1 and 10.");
-                }
+
+                student.examResult = student.homeworkResults.back(); // Take the last score as exam result
+                student.homeworkResults.pop_back(); // Remove it from homework scores
 
                 students.push_back(student);
             }
+
         } else {
             int numStudents;
             std::cout << "Enter the number of students: ";
