@@ -9,17 +9,9 @@
 #include "student.h"
 #include "calculations.h"
 #include "input_output.h"
+#include "random_score.h"
+#include "score_validation.h"
 
-int generateRandomScore(int min, int max) {
-    static std::mt19937 rng(std::time(nullptr));
-    std::uniform_int_distribution<int> dist(min, max);
-    return dist(rng);
-}
-
-// Validate score
-bool isValidScore(int score) {
-    return score >= 1 && score <= 10;
-}
 
 int main() {
     try {
