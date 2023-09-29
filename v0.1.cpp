@@ -12,6 +12,7 @@
 #include "input_output.h"
 #include "random_score.h"
 #include "score_validation.h"
+#include "string_utils.h"
 
 
 int main() {
@@ -129,12 +130,33 @@ int main() {
             }
         }
 
-        // Sort the students by name and surname
+        // Sort the students
         std::sort(students.begin(), students.end(), [](const Student& a, const Student& b) {
-            if (a.name == b.name) {
-                return a.surname < b.surname;
+            std::string nonNumericNameA = extractNonNumericPart(a.name);
+            std::string nonNumericNameB = extractNonNumericPart(b.name);
+
+            if (nonNumericNameA != nonNumericNameB) {
+                return nonNumericNameA < nonNumericNameB;
             }
-            return a.name < b.name;
+
+            int numA = extractNumericPart(a.name);
+            int numB = extractNumericPart(b.name);
+            
+            if (numA != numB) {
+                return numA < numB;
+            }
+
+            std::string nonNumericSurnameA = extractNonNumericPart(a.surname);
+            std::string nonNumericSurnameB = extractNonNumericPart(b.surname);
+
+            if (nonNumericSurnameA != nonNumericSurnameB) {
+                return nonNumericSurnameA < nonNumericSurnameB;
+            }
+
+            int numSurnameA = extractNumericPart(a.surname);
+            int numSurnameB = extractNumericPart(b.surname);
+            
+            return numSurnameA < numSurnameB;
         });
 
         printDataFrameHeader();
