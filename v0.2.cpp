@@ -30,7 +30,7 @@ int main() {
         std::cout << "Do you want to generate random student data files? (y/n): ";
         std::cin >> generateData;
 
-        std::vector<int> sizes = {1000, 10000, 100000, 1000000, 10000000};
+        std::vector<int> sizes = {1000, 10000, 100000, 1000000};
 
         if (generateData == 'y') {
             for (int size : sizes) {
