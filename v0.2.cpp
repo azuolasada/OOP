@@ -6,7 +6,7 @@
 #include "calculations.h"
 #include "input_output.h"
 #include "score_validation.h"
-#include "student_generator.h" // This should include the student generation functions
+#include "student_generator.h" // This includes the student generation functions
 
 int main() {
     try {
@@ -17,8 +17,9 @@ int main() {
         char generateData;
         std::cout << "Do you want to generate random student data files? (y/n): ";
         std::cin >> generateData;
+        std::cin.ignore();  // Clear the input buffer
 
-        if (generateData == 'y') {
+        if (generateData == 'y' || generateData == 'Y') {
             std::vector<int> sizes = {1000, 10000, 100000, 1000000, 10000000};
 
             for (int size : sizes) {
@@ -48,5 +49,3 @@ int main() {
 
     return 0;
 }
-
-

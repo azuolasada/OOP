@@ -49,15 +49,3 @@ void generateStudentFile(const std::string& filename, size_t numRecords) {
     // Close the file.
     outFile.close();
 }
-
-int main() {
-    // Generate student list files with the desired number of records.
-    generateStudentFile("students_1000.csv", 1000);
-    generateStudentFile("students_10000.csv", 10000);
-    generateStudentFile("students_100000.csv", 100000);
-    generateStudentFile("students_1000000.csv", 1000000);
-    generateStudentFile("students_10000000.csv", 10000000);
-
-    std::cout << "Student list files generated successfully!" << std::endl;
-    return 0;
-}
