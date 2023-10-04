@@ -7,4 +7,5 @@ struct Student {
     std::string surname;
     std::vector<int> homeworkResults;
     int examResult;
+    double finalScore;
 };
