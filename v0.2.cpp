@@ -36,7 +36,7 @@ int main() {
             for (int size : sizes) {
                 std::string filename = "students_" + std::to_string(size) + ".csv";
                 std::cout << "Generating file: " << filename << " with " << size << " students..." << std::endl;
-                
+
                 auto start_time = std::chrono::high_resolution_clock::now();
                 generateStudentFile(filename, size);
                 auto end_time = std::chrono::high_resolution_clock::now();
@@ -56,31 +56,40 @@ int main() {
             }
 
             std::string header;
-            std::getline(file, header);
+            std::getline(file, header);  // Read the header
 
-            while (file) {
+            std::string line;
+            while (std::getline(file, line)) {
                 Student student;
-                file >> student.name >> student.surname;
+                std::istringstream iss(line);
+                std::vector<std::string> values;
 
-                if (file.eof()) break;
+                std::string value;
+                while (std::getline(iss, value, ',')) {  // Split by commas
+                    values.push_back(value);
+                }
 
-                std::string scoreLine;
-                std::getline(file, scoreLine);
+                if (values.size() < 3) {
+                    throw std::runtime_error("Error reading file. Insufficient data.");
+                }
 
-                std::istringstream iss(scoreLine);
-                int score;
-                while (iss >> score) {
+                student.name = values[0];
+                student.surname = values[1];
+
+                for (size_t i = 2; i < values.size() - 1; i++) {  // Last score is the exam result
+                    int score = std::stoi(values[i]);
                     if (!isValidScore(score)) {
                         throw std::runtime_error("Invalid score from file! Scores should be between 1 and 10.");
                     }
                     student.homeworkResults.push_back(score);
                 }
 
-                student.examResult = student.homeworkResults.back();
-                student.homeworkResults.pop_back();
+                student.examResult = std::stoi(values.back());  // Last value is the exam result
 
                 students.push_back(student);
             }
+
+            std::cout << "Calculating final scores for students in " << filename << "..." << std::endl;
 
             // Calculate the finalScore for each student
             for (auto &student : students) {
@@ -88,6 +97,7 @@ int main() {
                 student.finalScore = 0.4 * homeworkScore + 0.6 * student.examResult;
             }
 
+            std::cout << "Sorting students from " << filename << " based on their final scores..." << std::endl;
             // Sort the students based on their finalScore
             std::sort(students.begin(), students.end(), [](const Student& a, const Student& b) {
                 return a.finalScore < b.finalScore;
@@ -104,22 +114,15 @@ int main() {
                 }
             }
 
+            std::cout << "Writing data to files for students from " << filename << "..." << std::endl;
             // Write to separate files
             writeStudentsToFile(good_students, "good_students_" + std::to_string(size) + ".csv");
             writeStudentsToFile(bad_students, "bad_students_" + std::to_string(size) + ".csv");
+
+            std::cout << "Data writing completed for " << filename << "!" << std::endl;
         }
 
-        // Print out the sorted students' data
-        printDataFrameHeader();
-        for (const auto &student : students) {
-            std::cout << std::left << std::setw(15) << student.name
-                      << std::setw(15) << student.surname
-                      << std::setw(15) << student.finalScore
-                      << std::endl;
-        }
-
-    } 
-    catch (const std::exception &e) {
+    } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
