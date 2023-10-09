@@ -27,6 +27,8 @@ int main() {
         for (int size : sizes) {
             std::string filename = "students_" + std::to_string(size) + ".csv";
 
+            auto start_time_total = std::chrono::high_resolution_clock::now();
+
             auto start_time_read = std::chrono::high_resolution_clock::now();
             std::ifstream file(filename);
             if (!file) {
@@ -71,8 +73,6 @@ int main() {
                 student.finalScore = 0.4 * homeworkScore + 0.6 * student.examResult;
             }
 
-            std::cout << "Sorting students from " << filename << " based on their final scores..." << std::endl;
-
             auto start_time_sort = std::chrono::high_resolution_clock::now();
             std::sort(students.begin(), students.end(), [](const Student& a, const Student& b) {
                 return a.finalScore < b.finalScore;
@@ -92,16 +92,16 @@ int main() {
             std::chrono::duration<double> sort_duration = end_time_sort - start_time_sort;
             std::cout << "Time taken to sort students from " << filename << ": " << sort_duration.count() << " seconds." << std::endl;
 
-            std::cout << "Writing data to files for students from " << filename << "..." << std::endl;
-
             auto start_time_write = std::chrono::high_resolution_clock::now();
             writeStudentsToFile(good_students, "good_students_" + std::to_string(size) + ".csv");
             writeStudentsToFile(bad_students, "bad_students_" + std::to_string(size) + ".csv");
             auto end_time_write = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> write_duration = end_time_write - start_time_write;
-
             std::cout << "Time taken to write sorted students to files from " << filename << ": " << write_duration.count() << " seconds." << std::endl;
-            std::cout << "Data writing completed for " << filename << "!" << std::endl;
+
+            auto end_time_total = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> total_duration = end_time_total - start_time_total;
+            std::cout << "Total time taken for processing " << filename << ": " << total_duration.count() << " seconds." << std::endl;
         }
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
