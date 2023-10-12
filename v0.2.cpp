@@ -10,14 +10,8 @@
 #include "input_output.h"
 #include "score_validation.h"
 #include "student_generator.h"
+#include "write_students.h"
 
-void writeStudentsToFile(const std::vector<Student>& students, const std::string& filename) {
-    std::ofstream out(filename);
-    out << "Name,Surname,FinalScore\n";
-    for (const auto& student : students) {
-        out << student.name << "," << student.surname << "," << student.finalScore << "\n";
-    }
-}
 
 int main() {
     try {
