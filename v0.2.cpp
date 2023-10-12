@@ -7,7 +7,6 @@
 #include <sstream>
 #include "student.h"
 #include "calculations.h"
-#include "input_output.h"
 #include "score_validation.h"
 #include "student_generator.h"
 #include "write_students.h"
@@ -124,7 +123,7 @@ int main() {
 
             writeStudentsToFile(good_students, "good_students_" + std::to_string(size) + ".csv");
             writeStudentsToFile(bad_students, "bad_students_" + std::to_string(size) + ".csv");
-            
+
             auto end_time_write = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> write_duration = end_time_write - start_time_write;
             std::cout << "Time taken to write sorted students to files from " << filename << ": " << write_duration.count() << " seconds." << std::endl;
