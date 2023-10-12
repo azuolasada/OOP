@@ -74,9 +74,10 @@ int main() {
             }
             auto end_time_read = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> read_duration = end_time_read - start_time_read;
+            std::cout << "-----------------------------------------" << std::endl;
+            std::cout << "Process start from a file: " << filename << std::endl;
             std::cout << "Time taken to read data from " << filename << ": " << read_duration.count() << " seconds." << std::endl;
 
-            std::cout << "Calculating final scores for students in " << filename << "..." << std::endl;
             for (auto &student : students) {
                 double homeworkScore = computeMean(student.homeworkResults);
                 student.finalScore = 0.4 * homeworkScore + 0.6 * student.examResult;

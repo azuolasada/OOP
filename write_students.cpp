@@ -1,4 +1,6 @@
 #include <fstream>
+#include <vector>
+#include "student.h"
 
 void writeStudentsToFile(const std::vector<Student>& students, const std::string& filename) {
     std::ofstream out(filename);
