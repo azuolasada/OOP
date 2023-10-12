@@ -21,6 +21,21 @@ void writeStudentsToFile(const std::vector<Student>& students, const std::string
 
 int main() {
     try {
+        // char generateData10M;
+        // std::cout << "Do you want to generate random student data file with 10 million entries? (y/n): ";
+        // std::cin >> generateData10M;
+
+        // if (generateData10M == 'y') {
+        //     std::string filename10M = "students_10000000.csv";
+        //     std::cout << "Generating file: " << filename10M << " with 10 million students..." << std::endl;
+
+        //     auto start_time_gen10M = std::chrono::high_resolution_clock::now();
+        //     generateStudentFile(filename10M, 10000000);
+        //     auto end_time_gen10M = std::chrono::high_resolution_clock::now();
+        //     std::chrono::duration<double> gen_duration10M = end_time_gen10M - start_time_gen10M;
+
+        //     std::cout << "Time taken to generate 10 million students: " << gen_duration10M.count() << " seconds." << std::endl;
+        // }
         std::vector<Student> students;
         std::vector<int> sizes = {1000, 10000, 100000, 1000000};
 
