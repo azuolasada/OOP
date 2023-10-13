@@ -37,33 +37,33 @@ write_students.cpp: Writes student data to files.
 
 Time averages
 
------------------------------------------
-Process start from a file: students_1000.csv
-Time taken to read data from students_1000.csv: 0.00313144 seconds.
-Time taken to sort students from students_1000.csv: 0.00128485 seconds.
-Time taken to write sorted students to files from students_1000.csv: 0.00102998 seconds.
-Total time taken for processing students_1000.csv: 0.00561004 seconds.
------------------------------------------
-Process start from a file: students_10000.csv
-Time taken to read data from students_10000.csv: 0.0322387 seconds.
-Time taken to sort students from students_10000.csv: 0.0170371 seconds.
-Time taken to write sorted students to files from students_10000.csv: 0.00778323 seconds.
-Total time taken for processing students_10000.csv: 0.0579313 seconds.
------------------------------------------
-Process start from a file: students_100000.csv
-Time taken to read data from students_100000.csv: 0.305175 seconds.
-Time taken to sort students from students_100000.csv: 0.294362 seconds.
-Time taken to write sorted students to files from students_100000.csv: 0.08592 seconds.
-Total time taken for processing students_100000.csv: 0.694497 seconds.
------------------------------------------
-Process start from a file: students_1000000.csv
-Time taken to read data from students_1000000.csv: 4.23209 seconds.
-Time taken to sort students from students_1000000.csv: 3.04734 seconds.
-Time taken to write sorted students to files from students_1000000.csv: 0.831903 seconds.
-Total time taken for processing students_1000000.csv: 8.40312 seconds.
------------------------------------------
-Process start from a file: students_10000000.csv
-Time taken to read data from students_10000000.csv: 33.5374 seconds.
-Time taken to sort students from students_10000000.csv: 33.6608 seconds.
-Time taken to write sorted students to files from students_10000000.csv: 9.16867 seconds.
-Total time taken for processing students_10000000.csv: 77.2821 seconds.
+Size: 1000
+Read: 0.00313144 seconds
+Sort: 0.00102998 seconds
+Write: 0.00102998 seconds
+Total: 0.00561004 seconds
+
+Size: 10000
+Read: 0.0322387 seconds
+Sort: 0.0170371 seconds
+Write: 0.00778323 seconds
+Total: 0.0579313 seconds
+
+Size: 100 000
+Read: 0.305175 seconds
+Sort: 0.294362 seconds
+Write: 0.08592 seconds
+Total: 0.694497 seconds
+
+Size: 1 000 000
+Read: 4.23209 seconds
+Sort: 3.04734 seconds
+Write: 0.831903 seconds
+Total: 8.40312 seconds
+
+Size: 10 000 000
+Read: 33.5374 seconds
+Sort: 33.6608 seconds
+Write: 33.6608 seconds
+Total: 77.2821 seconds
+
