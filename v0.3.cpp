@@ -5,11 +5,7 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
-#include "student.h"
-#include "calculations.h"
-#include "score_validation.h"
-#include "student_generator.h"
-#include "write_students.h"
+#include "side_functions.h"
 
 
 int main() {

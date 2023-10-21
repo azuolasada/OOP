@@ -1,8 +1,46 @@
-#include <iostream>
+#include "side_functions.h"
+
+#include <numeric>
+#include <algorithm>
 #include <fstream>
-#include <string>
+#include <iostream>
 #include <random>
 #include <ctime>
+
+// Function to compute the mean of a set of integers
+double computeMean(const std::vector<int>& results) {
+    // std::accumulate computes the sum of the results, divided by the number of elements to get the mean
+    return std::accumulate(results.begin(), results.end(), 0.0) / results.size();
+}
+
+// Function to compute the median of a set of integers
+double computeMedian(const std::vector<int>& results) {
+    size_t size = results.size();
+    std::vector<int> sortedResults = results;
+    std::sort(sortedResults.begin(), sortedResults.end());  // Sorting the results to find the median
+
+    // Check whether the size is even or odd and compute median accordingly
+    if (size % 2 == 0) {
+        // If even, return the average of the two middle elements
+        return (sortedResults[size / 2 - 1] + sortedResults[size / 2]) / 2.0;
+    } else {
+        // If odd, return the middle element
+        return sortedResults[size / 2];
+    }
+}
+
+bool isValidScore(int score) {
+    // The score is valid if it is between 1 and 10 inclusive
+    return score >= 1 && score <= 10;
+}
+
+void writeStudentsToFile(const std::vector<Student>& students, const std::string& filename) {
+    std::ofstream out(filename);
+    out << "Name,Surname,FinalScore\n";
+    for (const auto& student : students) {
+        out << student.name << "," << student.surname << "," << student.finalScore << "\n";
+    }
+}
 
 // Function to generate a random score between min and max.
 int generateRandomScore(int min, int max) {
