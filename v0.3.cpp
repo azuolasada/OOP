@@ -1,6 +1,6 @@
 #include <iostream>
 #include <iomanip>
-#include <vector>
+#include <list>
 #include <chrono>
 #include <algorithm>
 #include <fstream>
@@ -27,7 +27,7 @@ int main() {
         // }
 
         // Create a container to store Student objects.
-        std::vector<Student> students;
+        std::list<Student> students;
 
         // Define the sizes of student data files to be processed.
         std::vector<int> sizes = {1000, 10000, 100000, 1000000};
@@ -95,12 +95,12 @@ int main() {
             auto start_time_sort = std::chrono::high_resolution_clock::now();
 
             // Sort students based on their final score.
-            std::sort(students.begin(), students.end(), [](const Student& a, const Student& b) {
+            students.sort([](const Student& a, const Student& b) {
                 return a.finalScore < b.finalScore;
             });
 
-            std::vector<Student> bad_students;
-            std::vector<Student> good_students;
+            std::list<Student> bad_students;
+            std::list<Student> good_students;
 
             // Categorize students based on their final score.
             for (const auto &student : students) {

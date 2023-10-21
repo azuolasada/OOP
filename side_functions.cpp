@@ -8,7 +8,7 @@
 #include <ctime>
 
 // Function to compute the mean of a set of integers
-double computeMean(const std::vector<int>& results) {
+double computeMean(const std::list<int>& results) {
     // std::accumulate computes the sum of the results, divided by the number of elements to get the mean
     return std::accumulate(results.begin(), results.end(), 0.0) / results.size();
 }
@@ -34,7 +34,7 @@ bool isValidScore(int score) {
     return score >= 1 && score <= 10;
 }
 
-void writeStudentsToFile(const std::vector<Student>& students, const std::string& filename) {
+void writeStudentsToFile(const std::list<Student>& students, const std::string& filename) {
     std::ofstream out(filename);
     out << "Name,Surname,FinalScore\n";
     for (const auto& student : students) {
