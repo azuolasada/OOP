@@ -5,7 +5,7 @@
 #include <list>
 
 template <typename Container>
-void processStudents(Container& students, const std::string& filename);
+void processStudents(Container& students, const std::string& filename, int strategy);
 
 template <typename Container>
 double computeMean(const Container& results);

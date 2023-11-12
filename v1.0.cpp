@@ -9,6 +9,16 @@ int main() {
         std::cout << "Select container type (l for list, v for vector): ";
         std::cin >> containerType;
 
+        int strategy;
+        std::cout << "Select strategy (1 for Strategy 1, 2 for Strategy 2): ";
+        std::cin >> strategy;
+
+        // Check if the strategy number is valid
+        if (strategy != 1 && strategy != 2) {
+            std::cerr << "Invalid strategy number!" << std::endl;
+            return 1;
+        }
+
         // Define the sizes of student data files to be processed.
         std::vector<int> sizes = {1000, 10000, 100000, 1000000};
 
@@ -17,10 +27,10 @@ int main() {
 
             if (containerType == 'l') {
                 std::list<Student> students;
-                processStudents(students, filename);
+                processStudents(students, filename, strategy);
             } else if (containerType == 'v') {
                 std::vector<Student> students;
-                processStudents(students, filename);
+                processStudents(students, filename, strategy);
             } else {
                 std::cerr << "Invalid container type selected!" << std::endl;
                 return 1;

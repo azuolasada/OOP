@@ -75,7 +75,7 @@ void generateStudentFile(const std::string& filename, size_t numRecords) {
 }
 
 template <typename Container>
-void processStudents(Container& students, const std::string& filename) {
+void processStudents(Container& students, const std::string& filename, int strategy) {
     // Start reading file
     auto start_time_read = std::chrono::high_resolution_clock::now();
 
@@ -130,17 +130,33 @@ void processStudents(Container& students, const std::string& filename) {
     // Writing to files
     auto start_time_write = std::chrono::high_resolution_clock::now();
 
-    Container good_students, bad_students;
-    for (const auto& student : students) {
-        if (student.finalScore < 5.0) {
-            bad_students.push_back(student);
-        } else {
-            good_students.push_back(student);
+    if (strategy == 1) {
+        // Strategy 1: Split into two new containers
+        Container good_students, bad_students;
+        for (const auto& student : students) {
+            if (student.finalScore < 5.0) {
+                bad_students.push_back(student);
+            } else {
+                good_students.push_back(student);
+            }
         }
+        writeStudentsToFile(good_students, "good_" + filename);
+        writeStudentsToFile(bad_students, "bad_" + filename);
+    } else if (strategy == 2) {
+        // Strategy 2: Modify the original container
+        Container bad_students;
+        auto it = students.begin();
+        while (it != students.end()) {
+            if (it->finalScore < 5.0) {
+                bad_students.push_back(*it);
+                it = students.erase(it); // Removes the student from the original container
+            } else {
+                ++it;
+            }
+        }
+        writeStudentsToFile(students, "good_" + filename);
+        writeStudentsToFile(bad_students, "bad_" + filename);
     }
-
-    writeStudentsToFile(good_students, "good_" + filename);
-    writeStudentsToFile(bad_students, "bad_" + filename);
 
     auto end_time_write = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> write_duration = end_time_write - start_time_write;
@@ -155,8 +171,8 @@ void processStudents(Container& students, const std::string& filename) {
 }
 
 // Explicit template instantiation for std::list and std::vector
-template void processStudents(std::list<Student>&, const std::string&);
-template void processStudents(std::vector<Student>&, const std::string&);
+template void processStudents(std::list<Student>&, const std::string&, int);
+template void processStudents(std::vector<Student>&, const std::string&, int);
 
 template void writeStudentsToFile(const std::list<Student>& students, const std::string& filename);
 template void writeStudentsToFile(const std::vector<Student>& students, const std::string& filename);
