@@ -74,6 +74,7 @@ void generateStudentFile(const std::string& filename, size_t numRecords) {
     outFile.close();
 }
 
+
 template <typename Container>
 void processStudents(Container& students, const std::string& filename, int strategy) {
     // Start reading file
@@ -114,7 +115,6 @@ void processStudents(Container& students, const std::string& filename, int strat
     // Sorting students
     auto start_time_sort = std::chrono::high_resolution_clock::now();
 
-    // The sorting logic depends on the container type.
     if constexpr (std::is_same<Container, std::list<Student>>::value) {
         students.sort([](const Student& a, const Student& b) {
             return a.finalScore < b.finalScore;
@@ -131,9 +131,21 @@ void processStudents(Container& students, const std::string& filename, int strat
     // Writing to files
     auto start_time_write = std::chrono::high_resolution_clock::now();
 
-    if (strategy == 1 || strategy == 3) {
-        // Use std::stable_partition for Strategy 3
-
+    // Strategy 1: Basic separation into two new containers
+    if (strategy == 1) {
+        Container good_students, bad_students;
+        for (const auto& student : students) {
+            if (student.finalScore < 5.0) {
+                bad_students.push_back(student);
+            } else {
+                good_students.push_back(student);
+            }
+        }
+        writeStudentsToFile(good_students, "good_" + filename);
+        writeStudentsToFile(bad_students, "bad_" + filename);
+    } 
+    // Strategy 3: Optimized for std::vector using std::partition
+    else if (strategy == 3) {
         auto partitionPoint = std::partition(students.begin(), students.end(),
                                              [](const Student& s) { return s.finalScore >= 5.0; });
 
@@ -148,15 +160,15 @@ void processStudents(Container& students, const std::string& filename, int strat
             writeStudentsToFile(good_students, "good_" + filename);
             writeStudentsToFile(bad_students, "bad_" + filename);
         } else {
-            // For other container types, use the existing logic
             Container good_students(students.begin(), partitionPoint);
             Container bad_students(partitionPoint, students.end());
 
             writeStudentsToFile(good_students, "good_" + filename);
             writeStudentsToFile(bad_students, "bad_" + filename);
         }
-    } else if (strategy == 2) {
-        // Strategy 2: Modify the original container
+    } 
+    // Strategy 2: Modify the original container
+    else if (strategy == 2) {
         Container bad_students;
         auto it = students.begin();
         while (it != students.end()) {
@@ -182,6 +194,7 @@ void processStudents(Container& students, const std::string& filename, int strat
     std::cout << "Write time: " << write_duration.count() << " seconds." << std::endl;
     std::cout << "Total processing time: " << (read_duration + sort_duration + write_duration).count() << " seconds." << std::endl;
 }
+
 
 // Explicit template instantiation for std::list and std::vector
 template void processStudents(std::list<Student>&, const std::string&, int);
