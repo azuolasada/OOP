@@ -78,6 +78,32 @@ Total processing time: 302.296 seconds.
 
 NaN
 
+Strategy 3:
+-----------------------------------------
+File: students_1000.csv
+Read time: 0.00211033 seconds.
+Sort time: 0.00108361 seconds.
+Write time: 0.0013028 seconds.
+Total processing time: 0.00449674 seconds.
+-----------------------------------------
+File: students_10000.csv
+Read time: 0.0179079 seconds.
+Sort time: 0.0133886 seconds.
+Write time: 0.0108015 seconds.
+Total processing time: 0.042098 seconds.
+-----------------------------------------
+File: students_100000.csv
+Read time: 0.168995 seconds.
+Sort time: 0.183667 seconds.
+Write time: 0.10335 seconds.
+Total processing time: 0.456012 seconds.
+-----------------------------------------
+File: students_1000000.csv
+Read time: 1.69891 seconds.
+Sort time: 2.39712 seconds.
+Write time: 1.12614 seconds.
+Total processing time: 5.22217 seconds.
+
 Time averages(list):
 Strategy 1:
 -----------------------------------------
@@ -130,3 +156,29 @@ Read time: 1.87972 seconds.
 Sort time: 1.21176 seconds.
 Write time: 0.933052 seconds.
 Total processing time: 4.02453 seconds.
+
+Strategy 3:
+-----------------------------------------
+File: students_1000.csv
+Read time: 0.0021549 seconds.
+Sort time: 0.000458654 seconds.
+Write time: 0.00153691 seconds.
+Total processing time: 0.00415047 seconds.
+-----------------------------------------
+File: students_10000.csv
+Read time: 0.0182307 seconds.
+Sort time: 0.00548761 seconds.
+Write time: 0.0121416 seconds.
+Total processing time: 0.03586 seconds.
+-----------------------------------------
+File: students_100000.csv
+Read time: 0.180252 seconds.
+Sort time: 0.068724 seconds.
+Write time: 0.157162 seconds.
+Total processing time: 0.406138 seconds.
+-----------------------------------------
+File: students_1000000.csv
+Read time: 1.80134 seconds.
+Sort time: 1.11793 seconds.
+Write time: 1.75462 seconds.
+Total processing time: 4.6739 seconds.

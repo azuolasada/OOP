@@ -133,11 +133,11 @@ void processStudents(Container& students, const std::string& filename, int strat
 
     if (strategy == 1 || strategy == 3) {
         // Use std::stable_partition for Strategy 3
-        auto partitionPoint = std::stable_partition(students.begin(), students.end(),
-                                                    [](const Student& s) { return s.finalScore >= 5.0; });
+
+        auto partitionPoint = std::partition(students.begin(), students.end(),
+                                             [](const Student& s) { return s.finalScore >= 5.0; });
 
         if constexpr (std::is_same<Container, std::vector<Student>>::value) {
-            // Optimize for std::vector using std::copy
             Container good_students, bad_students;
             good_students.reserve(std::distance(students.begin(), partitionPoint));
             bad_students.reserve(std::distance(partitionPoint, students.end()));
