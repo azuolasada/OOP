@@ -1,5 +1,5 @@
 # OOP
-v0.3
+v1.0
 
 This is a simple program to manage student data, calculate their final scores, and sort them into categories.
 
@@ -29,15 +29,104 @@ v0.3.cpp: The main program.
 side_functions.cpp: Contains side functions used in the main program.
 
 Time averages (vector):
+Strategy 1:
 
-Size: 1000 Read: 0.00313144 seconds Sort: 0.00102998 seconds Write: 0.00102998 seconds Total: 0.00561004 seconds
+-----------------------------------------
+File: students_1000.csv
+Read time: 0.00228861 seconds.
+Sort time: 0.000944754 seconds.
+Write time: 0.00123954 seconds.
+Total processing time: 0.0044729 seconds.
+-----------------------------------------
+File: students_10000.csv
+Read time: 0.0211663 seconds.
+Sort time: 0.0112507 seconds.
+Write time: 0.00950556 seconds.
+Total processing time: 0.0419226 seconds.
+-----------------------------------------
+File: students_100000.csv
+Read time: 0.188785 seconds.
+Sort time: 0.149576 seconds.
+Write time: 0.0920896 seconds.
+Total processing time: 0.430451 seconds.
+-----------------------------------------
+File: students_1000000.csv
+Read time: 1.92084 seconds.
+Sort time: 1.98602 seconds.
+Write time: 0.970726 seconds.
+Total processing time: 4.87758 seconds.
 
-Size: 10000 Read: 0.0322387 seconds Sort: 0.0170371 seconds Write: 0.00778323 seconds Total: 0.0579313 seconds
+Strategy 2:
+-----------------------------------------
+File: students_1000.csv
+Read time: 0.00237341 seconds.
+Sort time: 0.000935052 seconds.
+Write time: 0.0304455 seconds.
+Total processing time: 0.033754 seconds.
+-----------------------------------------
+File: students_10000.csv
+Read time: 0.026772 seconds.
+Sort time: 0.011238 seconds.
+Write time: 3.09683 seconds.
+Total processing time: 3.13484 seconds.
+-----------------------------------------
+File: students_100000.csv
+Read time: 0.183112 seconds.
+Sort time: 0.150305 seconds.
+Write time: 301.963 seconds.
+Total processing time: 302.296 seconds.
 
-Size: 100 000 Read: 0.305175 seconds Sort: 0.294362 seconds Write: 0.08592 seconds Total: 0.694497 seconds
-
-Size: 1 000 000 Read: 4.23209 seconds Sort: 3.04734 seconds Write: 0.831903 seconds Total: 8.40312 seconds
-
-Size: 10 000 000 Read: 33.5374 seconds Sort: 33.6608 seconds Write: 33.6608 seconds Total: 77.2821 seconds
+NaN
 
 Time averages(list):
+Strategy 1:
+-----------------------------------------
+File: students_1000.csv
+Read time: 0.00220979 seconds.
+Sort time: 0.000459017 seconds.
+Write time: 0.00128124 seconds.
+Total processing time: 0.00395005 seconds.
+-----------------------------------------
+File: students_10000.csv
+Read time: 0.0187449 seconds.
+Sort time: 0.00556794 seconds.
+Write time: 0.00828573 seconds.
+Total processing time: 0.0325985 seconds.
+-----------------------------------------
+File: students_100000.csv
+Read time: 0.184278 seconds.
+Sort time: 0.0649531 seconds.
+Write time: 0.0854591 seconds.
+Total processing time: 0.33469 seconds.
+-----------------------------------------
+File: students_1000000.csv
+Read time: 1.92206 seconds.
+Sort time: 1.08167 seconds.
+Write time: 1.03058 seconds.
+Total processing time: 4.03431 seconds.
+
+Strategy 2:
+-----------------------------------------
+File: students_1000.csv
+Read time: 0.00223679 seconds.
+Sort time: 0.00046602 seconds.
+Write time: 0.00100012 seconds.
+Total processing time: 0.00370292 seconds.
+-----------------------------------------
+File: students_10000.csv
+Read time: 0.0184731 seconds.
+Sort time: 0.00560782 seconds.
+Write time: 0.00692744 seconds.
+Total processing time: 0.0310083 seconds.
+-----------------------------------------
+File: students_100000.csv
+Read time: 0.180833 seconds.
+Sort time: 0.0658852 seconds.
+Write time: 0.071678 seconds.
+Total processing time: 0.318396 seconds.
+-----------------------------------------
+File: students_1000000.csv
+Read time: 1.87972 seconds.
+Sort time: 1.21176 seconds.
+Write time: 0.933052 seconds.
+Total processing time: 4.02453 seconds.

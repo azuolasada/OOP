@@ -10,11 +10,11 @@ int main() {
         std::cin >> containerType;
 
         int strategy;
-        std::cout << "Select strategy (1 for Strategy 1, 2 for Strategy 2): ";
+        std::cout << "Select strategy (1 for Strategy 1, 2 for Strategy 2, 3 for Strategy 3): ";
         std::cin >> strategy;
 
         // Check if the strategy number is valid
-        if (strategy != 1 && strategy != 2) {
+        if (strategy != 1 && strategy != 2 && strategy != 3) {
             std::cerr << "Invalid strategy number!" << std::endl;
             return 1;
         }

@@ -114,6 +114,7 @@ void processStudents(Container& students, const std::string& filename, int strat
     // Sorting students
     auto start_time_sort = std::chrono::high_resolution_clock::now();
 
+    // The sorting logic depends on the container type.
     if constexpr (std::is_same<Container, std::list<Student>>::value) {
         students.sort([](const Student& a, const Student& b) {
             return a.finalScore < b.finalScore;
@@ -130,18 +131,30 @@ void processStudents(Container& students, const std::string& filename, int strat
     // Writing to files
     auto start_time_write = std::chrono::high_resolution_clock::now();
 
-    if (strategy == 1) {
-        // Strategy 1: Split into two new containers
-        Container good_students, bad_students;
-        for (const auto& student : students) {
-            if (student.finalScore < 5.0) {
-                bad_students.push_back(student);
-            } else {
-                good_students.push_back(student);
-            }
+    if (strategy == 1 || strategy == 3) {
+        // Use std::stable_partition for Strategy 3
+        auto partitionPoint = std::stable_partition(students.begin(), students.end(),
+                                                    [](const Student& s) { return s.finalScore >= 5.0; });
+
+        if constexpr (std::is_same<Container, std::vector<Student>>::value) {
+            // Optimize for std::vector using std::copy
+            Container good_students, bad_students;
+            good_students.reserve(std::distance(students.begin(), partitionPoint));
+            bad_students.reserve(std::distance(partitionPoint, students.end()));
+
+            std::copy(students.begin(), partitionPoint, std::back_inserter(good_students));
+            std::copy(partitionPoint, students.end(), std::back_inserter(bad_students));
+
+            writeStudentsToFile(good_students, "good_" + filename);
+            writeStudentsToFile(bad_students, "bad_" + filename);
+        } else {
+            // For other container types, use the existing logic
+            Container good_students(students.begin(), partitionPoint);
+            Container bad_students(partitionPoint, students.end());
+
+            writeStudentsToFile(good_students, "good_" + filename);
+            writeStudentsToFile(bad_students, "bad_" + filename);
         }
-        writeStudentsToFile(good_students, "good_" + filename);
-        writeStudentsToFile(bad_students, "bad_" + filename);
     } else if (strategy == 2) {
         // Strategy 2: Modify the original container
         Container bad_students;
@@ -149,7 +162,7 @@ void processStudents(Container& students, const std::string& filename, int strat
         while (it != students.end()) {
             if (it->finalScore < 5.0) {
                 bad_students.push_back(*it);
-                it = students.erase(it); // Removes the student from the original container
+                it = students.erase(it);
             } else {
                 ++it;
             }
