@@ -2,12 +2,19 @@
 
 #include "student.h"
 #include <vector>
+#include <list>
 
-double computeMean(const std::list<int>& results);
+template <typename Container>
+void processStudents(Container& students, const std::string& filename);
+
+template <typename Container>
+double computeMean(const Container& results);
 double computeMedian(const std::vector<int>& results);
 
 bool isValidScore(int score);
 
-void writeStudentsToFile(const std::list<Student>& students, const std::string& filename);
+template <typename Container>
+void writeStudentsToFile(const Container& students, const std::string& filename);
 
 void generateStudentFile(const std::string& filename, size_t numRecords);
+

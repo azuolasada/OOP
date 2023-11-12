@@ -1,15 +1,18 @@
 #include "side_functions.h"
-
 #include <numeric>
 #include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <random>
 #include <ctime>
+#include <list>
+#include <vector>
+#include <chrono>
+#include <sstream>
 
 // Function to compute the mean of a set of integers
-double computeMean(const std::list<int>& results) {
-    // std::accumulate computes the sum of the results, divided by the number of elements to get the mean
+template <typename Container>
+double computeMean(const Container& results) {
     return std::accumulate(results.begin(), results.end(), 0.0) / results.size();
 }
 
@@ -17,73 +20,143 @@ double computeMean(const std::list<int>& results) {
 double computeMedian(const std::vector<int>& results) {
     size_t size = results.size();
     std::vector<int> sortedResults = results;
-    std::sort(sortedResults.begin(), sortedResults.end());  // Sorting the results to find the median
+    std::sort(sortedResults.begin(), sortedResults.end());
 
-    // Check whether the size is even or odd and compute median accordingly
     if (size % 2 == 0) {
-        // If even, return the average of the two middle elements
         return (sortedResults[size / 2 - 1] + sortedResults[size / 2]) / 2.0;
     } else {
-        // If odd, return the middle element
         return sortedResults[size / 2];
     }
 }
 
 bool isValidScore(int score) {
-    // The score is valid if it is between 1 and 10 inclusive
     return score >= 1 && score <= 10;
 }
 
-void writeStudentsToFile(const std::list<Student>& students, const std::string& filename) {
+template <typename Container>
+void writeStudentsToFile(const Container& students, const std::string& filename) {
     std::ofstream out(filename);
     out << "Name,Surname,FinalScore\n";
     for (const auto& student : students) {
         out << student.name << "," << student.surname << "," << student.finalScore << "\n";
     }
-}
+} // Missing closing brace for writeStudentsToFile added here
 
-// Function to generate a random score between min and max.
 int generateRandomScore(int min, int max) {
-    static std::mt19937 rng(std::time(nullptr));  // Seed the random number generator once
+    static std::mt19937 rng(std::time(nullptr));
     std::uniform_int_distribution<int> dist(min, max);
     return dist(rng);
 }
 
-// Function to generate a student list file with the specified number of records.
 void generateStudentFile(const std::string& filename, size_t numRecords) {
     std::ofstream outFile(filename);
 
-    // Ensure the file is open before writing.
     if (!outFile.is_open()) {
         std::cerr << "Failed to open " << filename << " for writing." << std::endl;
         return;
     }
 
-    // Define the header of the file.
     outFile << "Name,Surname,Homework1,Homework2,Homework3,Homework4,Homework5,Exam\n";
 
-    // Iterate through the number of records.
     for (size_t i = 0; i < numRecords; ++i) {
-        // Generate a name and surname using a predictable pattern.
         std::string name = "Name" + std::to_string(i + 1);
         std::string surname = "Surname" + std::to_string(i + 1);
 
-        // Write the student's name and surname to the file.
         outFile << name << "," << surname;
 
-        // Generate 5 random homework scores.
         for (int j = 0; j < 5; ++j) {
-            int homeworkScore = generateRandomScore(1, 10);
-            outFile << "," << homeworkScore;
+            outFile << "," << generateRandomScore(1, 10);
         }
 
-        // Generate an exam score.
-        int examScore = generateRandomScore(1, 10);
-
-        // Write the exam score to the file.
-        outFile << "," << examScore << "\n";
+        outFile << "," << generateRandomScore(1, 10) << "\n";
     }
 
-    // Close the file.
     outFile.close();
 }
+
+template <typename Container>
+void processStudents(Container& students, const std::string& filename) {
+    // Start reading file
+    auto start_time_read = std::chrono::high_resolution_clock::now();
+
+    std::ifstream file(filename);
+    if (!file) {
+        throw std::runtime_error("Error opening file " + filename + "!");
+    }
+    std::string line, value;
+    std::getline(file, line);  // Read the header
+
+    while (std::getline(file, line)) {
+        Student student;
+        std::istringstream iss(line);
+
+        std::getline(iss, student.name, ',');
+        std::getline(iss, student.surname, ',');
+
+        while (std::getline(iss, value, ',')) {
+            int score = std::stoi(value);
+            student.homeworkResults.push_back(score);
+        }
+
+        student.examResult = student.homeworkResults.back();
+        student.homeworkResults.pop_back(); // Remove exam result from homework results
+
+        // Calculate final score
+        double homeworkScore = computeMean(student.homeworkResults);
+        student.finalScore = 0.4 * homeworkScore + 0.6 * student.examResult;
+
+        students.push_back(student);
+    }
+
+    auto end_time_read = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> read_duration = end_time_read - start_time_read;
+
+    // Sorting students
+    auto start_time_sort = std::chrono::high_resolution_clock::now();
+
+    if constexpr (std::is_same<Container, std::list<Student>>::value) {
+        students.sort([](const Student& a, const Student& b) {
+            return a.finalScore < b.finalScore;
+        });
+    } else {
+        std::sort(students.begin(), students.end(), [](const Student& a, const Student& b) {
+            return a.finalScore < b.finalScore;
+        });
+    }
+
+    auto end_time_sort = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> sort_duration = end_time_sort - start_time_sort;
+
+    // Writing to files
+    auto start_time_write = std::chrono::high_resolution_clock::now();
+
+    Container good_students, bad_students;
+    for (const auto& student : students) {
+        if (student.finalScore < 5.0) {
+            bad_students.push_back(student);
+        } else {
+            good_students.push_back(student);
+        }
+    }
+
+    writeStudentsToFile(good_students, "good_" + filename);
+    writeStudentsToFile(bad_students, "bad_" + filename);
+
+    auto end_time_write = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> write_duration = end_time_write - start_time_write;
+
+    // Output processing times
+    std::cout << "-----------------------------------------" << std::endl;
+    std::cout << "File: " << filename << std::endl;
+    std::cout << "Read time: " << read_duration.count() << " seconds." << std::endl;
+    std::cout << "Sort time: " << sort_duration.count() << " seconds." << std::endl;
+    std::cout << "Write time: " << write_duration.count() << " seconds." << std::endl;
+    std::cout << "Total processing time: " << (read_duration + sort_duration + write_duration).count() << " seconds." << std::endl;
+}
+
+// Explicit template instantiation for std::list and std::vector
+template void processStudents(std::list<Student>&, const std::string&);
+template void processStudents(std::vector<Student>&, const std::string&);
+
+template void writeStudentsToFile(const std::list<Student>& students, const std::string& filename);
+template void writeStudentsToFile(const std::vector<Student>& students, const std::string& filename);

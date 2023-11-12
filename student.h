@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
-#include <list>
+#include <vector>
 
 struct Student {
     std::string name;
     std::string surname;
-    std::list<int> homeworkResults;
+    std::vector<int> homeworkResults;
     int examResult;
     double finalScore;
 };
