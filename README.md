@@ -3,25 +3,34 @@ Overview
 This program categorizes students into 'good' and 'bad' categories based on their scores. It offers different strategies for sorting and provides performance metrics for each operation.
 
 Compiling
+
 g++ -std=c++17 -o v1.0 v1.0.cpp side_functions.cpp
 
 Running the Program
+
 After successful compilation, run the program with:
+
 ./v1.0
 
 
 Usage
+
 Upon running, the program will prompt you for inputs:
 
 Container Type: Choose the type of container to use for storing students.
 
 Enter 'l' for std::list.
+
 Enter 'v' for std::vector.
+
 Strategy: Choose the sorting strategy.
 
 Enter '1' for Strategy 1 (basic sorting without optimizations).
+
 Enter '2' for Strategy 2 (optimizes memory by modifying the original container).
+
 Enter '3' for Strategy 3 (optimized for std::vector using efficient sorting algorithms).
+
 The program will then process the student data from the specified file and output the time taken for each phase (reading data, sorting, writing data) and the total processing time.
 
 Time averages (vector):
