@@ -24,6 +24,8 @@ public:
     void setFinalScore(double newScore) { finalScore = newScore; }
     double getFinalScore() const { return finalScore; }
 
+    void removeLastHomeworkResult();
+
 private:
     std::string name;
     std::string surname;

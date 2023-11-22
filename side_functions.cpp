@@ -38,9 +38,9 @@ void writeStudentsToFile(const Container& students, const std::string& filename)
     std::ofstream out(filename);
     out << "Name,Surname,FinalScore\n";
     for (const auto& student : students) {
-        out << student.name << "," << student.surname << "," << student.finalScore << "\n";
+        out << student.getName() << "," << student.getSurname() << "," << student.getFinalScore() << "\n";
     }
-} // Missing closing brace for writeStudentsToFile added here
+}
 
 int generateRandomScore(int min, int max) {
     static std::mt19937 rng(std::time(nullptr));
@@ -74,6 +74,11 @@ void generateStudentFile(const std::string& filename, size_t numRecords) {
     outFile.close();
 }
 
+void Student::removeLastHomeworkResult() {
+    if (!homeworkResults.empty()) {
+        homeworkResults.pop_back();
+    }
+}
 
 template <typename Container>
 void processStudents(Container& students, const std::string& filename, int strategy) {
@@ -91,20 +96,22 @@ void processStudents(Container& students, const std::string& filename, int strat
         Student student;
         std::istringstream iss(line);
 
-        std::getline(iss, student.name, ',');
-        std::getline(iss, student.surname, ',');
+        std::string name, surname;
+        std::getline(iss, name, ',');
+        student.setName(name);
+        std::getline(iss, surname, ',');
+        student.setSurname(surname);
 
+        // Read and add homework results
         while (std::getline(iss, value, ',')) {
             int score = std::stoi(value);
-            student.homeworkResults.push_back(score);
+            student.addHomeworkResult(score);
         }
 
-        student.examResult = student.homeworkResults.back();
-        student.homeworkResults.pop_back(); // Remove exam result from homework results
+        student.removeLastHomeworkResult();  // Remove the last homework result (exam result)
 
-        // Calculate final score
-        double homeworkScore = computeMean(student.homeworkResults);
-        student.finalScore = 0.4 * homeworkScore + 0.6 * student.examResult;
+        double homeworkScore = computeMean(student.getHomeworkResults());
+        student.setFinalScore(0.4 * homeworkScore + 0.6 * student.getExamResult());
 
         students.push_back(student);
     }
@@ -117,11 +124,11 @@ void processStudents(Container& students, const std::string& filename, int strat
 
     if constexpr (std::is_same<Container, std::list<Student>>::value) {
         students.sort([](const Student& a, const Student& b) {
-            return a.finalScore < b.finalScore;
+            return a.getFinalScore() < b.getFinalScore();
         });
     } else {
         std::sort(students.begin(), students.end(), [](const Student& a, const Student& b) {
-            return a.finalScore < b.finalScore;
+            return a.getFinalScore() < b.getFinalScore();
         });
     }
 
@@ -131,11 +138,11 @@ void processStudents(Container& students, const std::string& filename, int strat
     // Writing to files
     auto start_time_write = std::chrono::high_resolution_clock::now();
 
-    // Strategy 1: Basic separation into two new containers
     if (strategy == 1) {
+        // Strategy 1: Basic separation into two new containers
         Container good_students, bad_students;
         for (const auto& student : students) {
-            if (student.finalScore < 5.0) {
+            if (student.getFinalScore() < 5.0) {
                 bad_students.push_back(student);
             } else {
                 good_students.push_back(student);
@@ -143,11 +150,10 @@ void processStudents(Container& students, const std::string& filename, int strat
         }
         writeStudentsToFile(good_students, "good_" + filename);
         writeStudentsToFile(bad_students, "bad_" + filename);
-    } 
-    // Strategy 3: Optimized for std::vector using std::partition
-    else if (strategy == 3) {
+    } else if (strategy == 3) {
+        // Strategy 3: Optimized for std::vector using std::partition
         auto partitionPoint = std::partition(students.begin(), students.end(),
-                                             [](const Student& s) { return s.finalScore >= 5.0; });
+                                             [](const Student& s) { return s.getFinalScore() >= 5.0; });
 
         if constexpr (std::is_same<Container, std::vector<Student>>::value) {
             Container good_students, bad_students;
@@ -166,13 +172,12 @@ void processStudents(Container& students, const std::string& filename, int strat
             writeStudentsToFile(good_students, "good_" + filename);
             writeStudentsToFile(bad_students, "bad_" + filename);
         }
-    } 
-    // Strategy 2: Modify the original container
-    else if (strategy == 2) {
+    } else if (strategy == 2) {
+        // Strategy 2: Modify the original container
         Container bad_students;
         auto it = students.begin();
         while (it != students.end()) {
-            if (it->finalScore < 5.0) {
+            if (it->getFinalScore() < 5.0) {
                 bad_students.push_back(*it);
                 it = students.erase(it);
             } else {
@@ -182,6 +187,7 @@ void processStudents(Container& students, const std::string& filename, int strat
         writeStudentsToFile(students, "good_" + filename);
         writeStudentsToFile(bad_students, "bad_" + filename);
     }
+
 
     auto end_time_write = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> write_duration = end_time_write - start_time_write;
@@ -195,8 +201,7 @@ void processStudents(Container& students, const std::string& filename, int strat
     std::cout << "Total processing time: " << (read_duration + sort_duration + write_duration).count() << " seconds." << std::endl;
 }
 
-
-// Explicit template instantiation for std::list and std::vector
+// Explicit template instantiation
 template void processStudents(std::list<Student>&, const std::string&, int);
 template void processStudents(std::vector<Student>&, const std::string&, int);
 
