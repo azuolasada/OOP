@@ -1,3 +1,7 @@
+#ifndef STUDENT_H
+#define STUDENT_H
+
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -6,7 +10,12 @@ public:
     // Constructors
     Student() = default;
     Student(const std::string& name, const std::string& surname, int examResult)
-        : name(name), surname(surname), examResult(examResult) {}
+        : name(name), surname(surname), examResult(examResult), finalScore(0.0) {}
+
+    // Rule of Three
+    ~Student() = default;
+    Student(const Student& other) = default;
+    Student& operator=(const Student& other) = default;
 
     // Public interface for accessing and modifying private data
     void setName(const std::string& newName) { name = newName; }
@@ -20,11 +29,14 @@ public:
 
     void addHomeworkResult(int result) { homeworkResults.push_back(result); }
     const std::vector<int>& getHomeworkResults() const { return homeworkResults; }
+    void removeLastHomeworkResult() { if (!homeworkResults.empty()) homeworkResults.pop_back(); }
 
     void setFinalScore(double newScore) { finalScore = newScore; }
     double getFinalScore() const { return finalScore; }
 
-    void removeLastHomeworkResult();
+    // Input/Output operators
+    friend std::istream& operator>>(std::istream& in, Student& student);
+    friend std::ostream& operator<<(std::ostream& out, const Student& student);
 
 private:
     std::string name;
@@ -33,3 +45,5 @@ private:
     int examResult;
     double finalScore;
 };
+
+#endif // STUDENT_H
