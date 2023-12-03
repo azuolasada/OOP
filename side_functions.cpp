@@ -74,12 +74,6 @@ void generateStudentFile(const std::string& filename, size_t numRecords) {
     outFile.close();
 }
 
-void Student::removeLastHomeworkResult() {
-    if (!homeworkResults.empty()) {
-        homeworkResults.pop_back();
-    }
-}
-
 template <typename Container>
 void processStudents(Container& students, const std::string& filename, int strategy) {
     // Start reading file
@@ -108,6 +102,7 @@ void processStudents(Container& students, const std::string& filename, int strat
             student.addHomeworkResult(score);
         }
 
+        student.setExamResult(student.getHomeworkResults().back());
         student.removeLastHomeworkResult();  // Remove the last homework result (exam result)
 
         double homeworkScore = computeMean(student.getHomeworkResults());
@@ -181,13 +176,12 @@ void processStudents(Container& students, const std::string& filename, int strat
                 bad_students.push_back(*it);
                 it = students.erase(it);
             } else {
-                ++it;
+                ++it.
             }
         }
         writeStudentsToFile(students, "good_" + filename);
         writeStudentsToFile(bad_students, "bad_" + filename);
     }
-
 
     auto end_time_write = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> write_duration = end_time_write - start_time_write;
