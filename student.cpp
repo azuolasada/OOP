@@ -1,18 +1,21 @@
 #include "student.h"
 
-// Implement constructors
+// Default constructor
 Student::Student() : examResult(0), finalScore(0.0) {}
 
+// Parameterized constructor
 Student::Student(const std::string& name, const std::string& surname, int examResult)
     : name(name), surname(surname), examResult(examResult), finalScore(0.0) {}
 
-// Implement the "Rule of Three"
-Student::Student(const Student& other) 
+// Copy constructor
+Student::Student(const Student& other)
     : name(other.name), surname(other.surname), homeworkResults(other.homeworkResults),
       examResult(other.examResult), finalScore(other.finalScore) {}
 
+// Destructor
 Student::~Student() {}
 
+// Copy assignment operator
 Student& Student::operator=(const Student& other) {
     if (this != &other) {
         name = other.name;
@@ -24,13 +27,7 @@ Student& Student::operator=(const Student& other) {
     return *this;
 }
 
-// Implement other member functions
-void Student::removeLastHomeworkResult() {
-    if (!homeworkResults.empty()) {
-        homeworkResults.pop_back();
-    }
-}
-
+// Setters and Getters
 void Student::setName(const std::string& newName) {
     name = newName;
 }
@@ -63,6 +60,14 @@ const std::vector<int>& Student::getHomeworkResults() const {
     return homeworkResults;
 }
 
+// Function to remove the last homework result (typically an exam result)
+void Student::removeLastHomeworkResult() {
+    if (!homeworkResults.empty()) {
+        homeworkResults.pop_back();
+    }
+}
+
+// Set and Get final score
 void Student::setFinalScore(double newScore) {
     finalScore = newScore;
 }
