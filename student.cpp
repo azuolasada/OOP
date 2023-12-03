@@ -1,4 +1,4 @@
-#include "Student.h"
+#include "student.h"
 
 // Implement constructors
 Student::Student() : examResult(0), finalScore(0.0) {}

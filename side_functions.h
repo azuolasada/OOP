@@ -5,7 +5,6 @@
 #include <list>
 #include <iostream>#pragma once
 
-#include "Student.h"
 #include <vector>
 #include <list>
 #include <iostream>
