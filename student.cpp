@@ -75,3 +75,27 @@ void Student::setFinalScore(double newScore) {
 double Student::getFinalScore() const {
     return finalScore;
 }
+
+// Output operator
+std::ostream& operator<<(std::ostream& os, const Student& student) {
+    os << "Name: " << student.getName() << ", "
+       << "Surname: " << student.getSurname() << ", "
+       << "Exam Result: " << student.getExamResult() << ", "
+       << "Final Score: " << student.getFinalScore();
+    return os;
+}
+
+// Input operator
+std::istream& operator>>(std::istream& is, Student& student) {
+    std::string name, surname;
+    int examResult;
+    double finalScore;
+
+    is >> name >> surname >> examResult >> finalScore;
+    student.setName(name);
+    student.setSurname(surname);
+    student.setExamResult(examResult);
+    student.setFinalScore(finalScore);
+
+    return is;
+}
