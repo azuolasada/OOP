@@ -122,8 +122,51 @@ void processStudents(Container& students, const std::string& filename, int strat
     std::chrono::duration<double> sort_duration = end_time_sort - start_time_sort;
 
     auto start_time_write = std::chrono::high_resolution_clock::now();
-    // Strategy implementation here...
-    // ...
+    if (strategy == 1) {
+        Container good_students, bad_students;
+        for (const auto& student : students) {
+            if (student.getFinalScore() < 5.0) {
+                bad_students.push_back(student);
+            } else {
+                good_students.push_back(student);
+            }
+        }
+        writeStudentsToFile(good_students, "good_" + filename);
+        writeStudentsToFile(bad_students, "bad_" + filename);
+    } else if (strategy == 3) {
+        auto partitionPoint = std::partition(students.begin(), students.end(),
+                                             [](const Student& s) { return s.getFinalScore() >= 5.0; });
+        if constexpr (std::is_same<Container, std::vector<Student>>::value) {
+            Container good_students(students.begin(), partitionPoint);
+            Container bad_students(partitionPoint, students.end());
+            writeStudentsToFile(good_students, "good_" + filename);
+            writeStudentsToFile(bad_students, "bad_" + filename);
+        } else {
+            Container good_students, bad_students;
+            for (auto it = students.begin(); it != partitionPoint; ++it) {
+                good_students.push_back(*it);
+            }
+            for (auto it = partitionPoint; it != students.end(); ++it) {
+                bad_students.push_back(*it);
+            }
+            writeStudentsToFile(good_students, "good_" + filename);
+            writeStudentsToFile(bad_students, "bad_" + filename);
+        }
+    } else if (strategy == 2) {
+        Container bad_students;
+        auto it = students.begin();
+        while (it != students.end()) {
+            if (it->getFinalScore() < 5.0) {
+                bad_students.push_back(*it);
+                it = students.erase(it);
+            } else {
+                ++it;
+            }
+        }
+        writeStudentsToFile(students, "good_" + filename);
+        writeStudentsToFile(bad_students, "bad_" + filename);
+    }
+
     auto end_time_write = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> write_duration = end_time_write - start_time_write;
 
