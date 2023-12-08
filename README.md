@@ -24,11 +24,11 @@ Follow the on-screen instructions.
 Files in the Project
 
 
-v0.3.cpp: The main program.
+v1.0.cpp: The main program.
 
 side_functions.cpp: Contains side functions used in the main program.
 
-Time averages (vector):
+Time averages (5 times) (vector):
 Strategy 1:
 
 -----------------------------------------
@@ -104,7 +104,7 @@ Sort time: 2.0001 seconds.
 Write time: 0.931938 seconds.
 Total processing time: 4.60318 seconds.
 
-Time averages(list):
+Time averages (5 times) (list):
 Strategy 1:
 -----------------------------------------
 File: students_1000.csv

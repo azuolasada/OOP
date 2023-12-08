@@ -10,6 +10,49 @@
 #include <chrono>
 #include <sstream>
 
+#include "side_functions.h"
+#include <numeric>
+#include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <random>
+#include <ctime>
+#include <list>
+#include <vector>
+#include <chrono>
+#include <sstream>
+
+
+Student inputStudentManually() {
+    Student student;
+    std::cout << "Enter student's name: ";
+    std::getline(std::cin, student.name); // Assuming name is a string
+
+    std::cout << "Enter student's surname: ";
+    std::getline(std::cin, student.surname); // Assuming surname is a string
+
+    // Assuming homeworkResults is a vector of integers
+    std::cout << "Enter homework results (end with a non-integer): ";
+    int result;
+    while (std::cin >> result) {
+        if (!isValidScore(result)) {
+            std::cout << "Invalid score. Please enter a score between 1 and 10." << std::endl;
+            continue;
+        }
+        student.homeworkResults.push_back(result);
+    }
+
+    std::cin.clear(); // Clear the error flags
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Skip to the next line
+
+    std::cout << "Enter student's exam result: ";
+    std::cin >> student.examResult;
+    std::cin.ignore(); // Ignore the newline character left in the buffer
+
+    return student; // Ensure you return a Student object
+
+}
+
 // Function to compute the mean of a set of integers
 template <typename Container>
 double computeMean(const Container& results) {
@@ -33,6 +76,11 @@ bool isValidScore(int score) {
     return score >= 1 && score <= 10;
 }
 
+bool fileExistsAndNotEmpty(const std::string& filename) {
+    std::ifstream file(filename);
+    return file.good() && file.peek() != std::ifstream::traits_type::eof();
+}
+
 template <typename Container>
 void writeStudentsToFile(const Container& students, const std::string& filename) {
     std::ofstream out(filename);
@@ -40,7 +88,7 @@ void writeStudentsToFile(const Container& students, const std::string& filename)
     for (const auto& student : students) {
         out << student.name << "," << student.surname << "," << student.finalScore << "\n";
     }
-} // Missing closing brace for writeStudentsToFile added here
+}
 
 int generateRandomScore(int min, int max) {
     static std::mt19937 rng(std::time(nullptr));
@@ -73,6 +121,17 @@ void generateStudentFile(const std::string& filename, size_t numRecords) {
 
     outFile.close();
 }
+
+template <typename Container>
+void displayStudents(const Container& students) {
+    for (const auto& student : students) {
+        std::cout << "Name: " << student.name 
+                  << ", Surname: " << student.surname 
+                  << ", Final Score: " << student.finalScore 
+                  << std::endl;
+    }
+}
+
 
 
 template <typename Container>
@@ -197,8 +256,9 @@ void processStudents(Container& students, const std::string& filename, int strat
 
 
 // Explicit template instantiation for std::list and std::vector
+template void displayStudents(const std::list<Student>& students);
+template void displayStudents(const std::vector<Student>& students);
 template void processStudents(std::list<Student>&, const std::string&, int);
 template void processStudents(std::vector<Student>&, const std::string&, int);
-
 template void writeStudentsToFile(const std::list<Student>& students, const std::string& filename);
 template void writeStudentsToFile(const std::vector<Student>& students, const std::string& filename);
