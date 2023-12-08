@@ -135,7 +135,7 @@ void displayStudents(const Container& students) {
 
 
 template <typename Container>
-void processStudents(Container& students, const std::string& filename, int strategy) {
+void processStudents(Container& students, const std::string& filename, int strategy, const std::string& sortCriterion) {
     // Start reading file
     auto start_time_read = std::chrono::high_resolution_clock::now();
 
@@ -171,21 +171,43 @@ void processStudents(Container& students, const std::string& filename, int strat
     auto end_time_read = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> read_duration = end_time_read - start_time_read;
 
-    // Sorting students
     auto start_time_sort = std::chrono::high_resolution_clock::now();
-
-    if constexpr (std::is_same<Container, std::list<Student>>::value) {
-        students.sort([](const Student& a, const Student& b) {
-            return a.finalScore < b.finalScore;
-        });
-    } else {
-        std::sort(students.begin(), students.end(), [](const Student& a, const Student& b) {
-            return a.finalScore < b.finalScore;
-        });
+    // Sorting students based on sortCriterion
+    if (sortCriterion == "name") {
+        if constexpr (std::is_same<Container, std::vector<Student>>::value) {
+            std::sort(students.begin(), students.end(), [](const Student& a, const Student& b) {
+                return a.name < b.name;
+            });
+        } else {
+            students.sort([](const Student& a, const Student& b) {
+                return a.name < b.name;
+            });
+        }
+    } else if (sortCriterion == "surname") {
+        if constexpr (std::is_same<Container, std::vector<Student>>::value) {
+            std::sort(students.begin(), students.end(), [](const Student& a, const Student& b) {
+                return a.surname < b.surname;
+            });
+        } else {
+            students.sort([](const Student& a, const Student& b) {
+                return a.surname < b.surname;
+            });
+        }
+    } else if (sortCriterion == "finalScore") {
+        if constexpr (std::is_same<Container, std::vector<Student>>::value) {
+            std::sort(students.begin(), students.end(), [](const Student& a, const Student& b) { 
+                return a.finalScore < b.finalScore; 
+            });
+        } else {
+            students.sort([](const Student& a, const Student& b) { 
+                return a.finalScore < b.finalScore; 
+            });
+        }
     }
 
     auto end_time_sort = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> sort_duration = end_time_sort - start_time_sort;
+
 
     // Writing to files
     auto start_time_write = std::chrono::high_resolution_clock::now();
@@ -258,7 +280,7 @@ void processStudents(Container& students, const std::string& filename, int strat
 // Explicit template instantiation for std::list and std::vector
 template void displayStudents(const std::list<Student>& students);
 template void displayStudents(const std::vector<Student>& students);
-template void processStudents(std::list<Student>&, const std::string&, int);
-template void processStudents(std::vector<Student>&, const std::string&, int);
+template void processStudents(std::list<Student>&, const std::string&, int, const std::string&);
+template void processStudents(std::vector<Student>&, const std::string&, int, const std::string&);
 template void writeStudentsToFile(const std::list<Student>& students, const std::string& filename);
 template void writeStudentsToFile(const std::vector<Student>& students, const std::string& filename);

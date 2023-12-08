@@ -28,6 +28,10 @@ int main() {
             throw std::runtime_error("Invalid display method selected!");
         }
 
+        std::string sortCriterion;
+        std::cout << "Select sort criterion (name, surname, finalScore): ";
+        std::cin >> sortCriterion;
+
         // Define the sizes of student data files to be processed.
         std::vector<int> sizes = {1000, 10000, 100000, 1000000};
 
@@ -37,13 +41,13 @@ int main() {
             if (inputMethod == 'f') {
                 if (containerType == 'l') {
                     std::list<Student> students;
-                    processStudents(students, filename, strategy);
+                    processStudents(students, filename, strategy, sortCriterion);
                     if (displayMethod == 's') {
                         displayStudents(students);
                     }
                 } else if (containerType == 'v') {
                     std::vector<Student> students;
-                    processStudents(students, filename, strategy);
+                    processStudents(students, filename, strategy, sortCriterion);
                     if (displayMethod == 's') {
                         displayStudents(students);
                     }
