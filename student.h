@@ -2,56 +2,93 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
 
 class Student {
+private:
+    std::string name;
+    std::string surname;
+    std::vector<int> homeworkResults;
+    int examResult;
+    double finalScore;
+
 public:
     // Default constructor
-    Student() = default; // Use the compiler-generated default constructor
+    Student() : examResult(0), finalScore(0.0) {}
 
     // Parameterized constructor
-    Student(const std::string& name, const std::string& surname, int examResult);
+    Student(const std::string& name, const std::string& surname, const std::vector<int>& homeworkResults, int examResult)
+        : name(name), surname(surname), homeworkResults(homeworkResults), examResult(examResult), finalScore(0.0) {}
 
-    // Copy constructor
-    Student(const Student& other) = default; // Use the compiler-generated copy constructor
+    // Rule of Three: Copy constructor
+    Student(const Student& other)
+        : name(other.name), surname(other.surname), homeworkResults(other.homeworkResults), examResult(other.examResult), finalScore(other.finalScore) {}
 
-    // Destructor
-    ~Student() = default; // Use the compiler-generated destructor
+    // Rule of Three: Copy assignment operator
+    Student& operator=(const Student& other) {
+        if (this != &other) {
+            name = other.name;
+            surname = other.surname;
+            homeworkResults = other.homeworkResults;
+            examResult = other.examResult;
+            finalScore = other.finalScore;
+        }
+        return *this;
+    }
 
-    // Copy assignment operator
-    Student& operator=(const Student& other) = default; // Use the compiler-generated copy assignment operator
+    // Rule of Three: Destructor
+    ~Student() {}
 
-    // Public methods to set and get student's details
-    void setName(const std::string& newName);
-    std::string getName() const;
+    // Getters
+    const std::string& getName() const { return name; }
+    const std::string& getSurname() const { return surname; }
+    const std::vector<int>& getHomeworkResults() const { return homeworkResults; }
+    int getExamResult() const { return examResult; }
+    double getFinalScore() const { return finalScore; }
 
-    void setSurname(const std::string& newSurname);
-    std::string getSurname() const;
+    // Setters
+    void setName(const std::string& newName) { name = newName; }
+    void setSurname(const std::string& newSurname) { surname = newSurname; }
+    void setHomeworkResults(const std::vector<int>& newHomeworkResults) { homeworkResults = newHomeworkResults; }
+    void setExamResult(int newExamResult) { examResult = newExamResult; }
+    void setFinalScore(double newFinalScore) { finalScore = newFinalScore; }
 
-    void setExamResult(int newExamResult);
-    int getExamResult() const;
-
-    // Method to add a homework result
-    void addHomeworkResult(int result);
-
-    // Method to get all homework results
-    const std::vector<int>& getHomeworkResults() const;
-
-    // Method to remove the last homework result (assuming it's the exam result)
-    void removeLastHomeworkResult();
-
-    // Method to set and get the final score
-    void setFinalScore(double newScore);
-    double getFinalScore() const;
-
-    // Friend declarations for input/output operators
+    // Friend declarations for input and output operators
     friend std::ostream& operator<<(std::ostream& os, const Student& student);
     friend std::istream& operator>>(std::istream& is, Student& student);
-
-private:
-    // Member variables
-    std::string name; // Student's name
-    std::string surname; // Student's surname
-    std::vector<int> homeworkResults; // Container for homework results
-    int examResult; // Exam result
-    double finalScore; // Final calculated score
 };
+
+// Inline output operator
+inline std::ostream& operator<<(std::ostream& os, const Student& student) {
+    os << student.getName() << ", " << student.getSurname();
+    for (const auto& hw : student.getHomeworkResults()) {
+        os << ", " << hw;
+    }
+    os << ", " << student.getExamResult();
+    return os;
+}
+
+// Inline input operator
+inline std::istream& operator>>(std::istream& is, Student& student) {
+    std::string line;
+    if (std::getline(is, line)) {
+        std::istringstream iss(line);
+        std::string token;
+        std::getline(iss, token, ',');
+        student.setName(token);
+        std::getline(iss, token, ',');
+        student.setSurname(token);
+
+        std::vector<int> homeworkResults;
+        while (std::getline(iss, token, ',')) {
+            if (iss.peek() == '\n' || iss.peek() == EOF) {
+                student.setExamResult(std::stoi(token));
+                break;
+            } else {
+                homeworkResults.push_back(std::stoi(token));
+            }
+        }
+        student.setHomeworkResults(homeworkResults);
+    }
+    return is;
+}
