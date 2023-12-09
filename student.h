@@ -1,34 +1,27 @@
 #pragma once
-#include <string>
+#include "Person.h"
 #include <vector>
-#include <iostream>
-#include <sstream>
 
-class Student {
+class Student : public Person {
 private:
-    std::string name;
-    std::string surname;
     std::vector<int> homeworkResults;
     int examResult;
     double finalScore;
 
 public:
-    // Default constructor
-    Student() : examResult(0), finalScore(0.0) {}
-
-    // Parameterized constructor
+    // Constructors updated to call Person's constructor
+    Student() : Person("", ""), examResult(0), finalScore(0.0) {}
     Student(const std::string& name, const std::string& surname, const std::vector<int>& homeworkResults, int examResult)
-        : name(name), surname(surname), homeworkResults(homeworkResults), examResult(examResult), finalScore(0.0) {}
+        : Person(name, surname), homeworkResults(homeworkResults), examResult(examResult), finalScore(0.0) {}
 
-    // Rule of Three: Copy constructor
+    // Copy constructor
     Student(const Student& other)
-        : name(other.name), surname(other.surname), homeworkResults(other.homeworkResults), examResult(other.examResult), finalScore(other.finalScore) {}
+        : Person(other.name, other.surname), homeworkResults(other.homeworkResults), examResult(other.examResult), finalScore(other.finalScore) {}
 
-    // Rule of Three: Copy assignment operator
+    // Copy assignment operator
     Student& operator=(const Student& other) {
         if (this != &other) {
-            name = other.name;
-            surname = other.surname;
+            Person::operator=(other);
             homeworkResults = other.homeworkResults;
             examResult = other.examResult;
             finalScore = other.finalScore;
@@ -36,19 +29,15 @@ public:
         return *this;
     }
 
-    // Rule of Three: Destructor
+    // Destructor
     ~Student() {}
 
     // Getters
-    const std::string& getName() const { return name; }
-    const std::string& getSurname() const { return surname; }
     const std::vector<int>& getHomeworkResults() const { return homeworkResults; }
     int getExamResult() const { return examResult; }
     double getFinalScore() const { return finalScore; }
 
     // Setters
-    void setName(const std::string& newName) { name = newName; }
-    void setSurname(const std::string& newSurname) { surname = newSurname; }
     void setHomeworkResults(const std::vector<int>& newHomeworkResults) { homeworkResults = newHomeworkResults; }
     void setExamResult(int newExamResult) { examResult = newExamResult; }
     void setFinalScore(double newFinalScore) { finalScore = newFinalScore; }
