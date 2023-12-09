@@ -11,8 +11,8 @@ public:
     Person(const std::string& name, const std::string& surname)
         : name(name), surname(surname) {}
 
-    // Pure virtual destructor to make this class abstract
-    virtual ~Person() = 0;
+    // Virtual destructor
+    virtual ~Person() {}
 
     // Getters
     const std::string& getName() const { return name; }
@@ -22,8 +22,4 @@ public:
     void setName(const std::string& newName) { name = newName; }
     void setSurname(const std::string& newSurname) { surname = newSurname; }
 
-    // Other pure virtual functions can be added here as needed
 };
-
-// Define the pure virtual destructor outside the class
-inline Person::~Person() {}

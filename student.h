@@ -1,6 +1,7 @@
 #pragma once
 #include "Person.h"
 #include <vector>
+#include <sstream>
 
 class Student : public Person {
 private:
@@ -9,19 +10,21 @@ private:
     double finalScore;
 
 public:
-    // Constructors updated to call Person's constructor
+    // Default constructor
     Student() : Person("", ""), examResult(0), finalScore(0.0) {}
+
+    // Parameterized constructor
     Student(const std::string& name, const std::string& surname, const std::vector<int>& homeworkResults, int examResult)
         : Person(name, surname), homeworkResults(homeworkResults), examResult(examResult), finalScore(0.0) {}
 
     // Copy constructor
     Student(const Student& other)
-        : Person(other.name, other.surname), homeworkResults(other.homeworkResults), examResult(other.examResult), finalScore(other.finalScore) {}
+        : Person(other), homeworkResults(other.homeworkResults), examResult(other.examResult), finalScore(other.finalScore) {}
 
     // Copy assignment operator
     Student& operator=(const Student& other) {
         if (this != &other) {
-            Person::operator=(other);
+            Person::operator=(other); // Call base class assignment operator
             homeworkResults = other.homeworkResults;
             examResult = other.examResult;
             finalScore = other.finalScore;
