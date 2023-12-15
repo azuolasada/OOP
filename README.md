@@ -14,18 +14,20 @@ Usage
 Run the program.
 Choose container type ('l' for list, 'v' for vector).
 Select processing strategy (1, 2, or 3).
-Building the Program
+Choose input method('m' for manual, 'f' for file).
+Choose output method('s' for screen, 'f' for file).
+Select sort criterion (name,surname or finalScore).
 
 
 
 Compile with:
-g++ -O3 -std=c++17 -o v1.2 main.cpp side_functions.cpp student.cpp
+g++ -O3 -std=c++17 -o v1.5 v1,5.cpp side_functions.cpp student.cpp
 
 
 
 Run with:
 Copy code
-./v1.2
+./v1.5
 
 
 
