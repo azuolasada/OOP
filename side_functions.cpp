@@ -11,8 +11,13 @@
 #include <sstream>
 #include <limits>
 
-// Assuming the Student class has appropriate getters, setters, and constructors
-
+/**
+ * @brief Prompts user input for creating a Student object.
+ * 
+ * This function asks the user to enter the name, surname, homework results, 
+ * and exam result of a student, then constructs and returns a Student object.
+ * @return A Student object constructed from user input.
+ */
 Student inputStudentManually() {
     std::string name, surname;
     std::vector<int> homeworkResults;
@@ -44,12 +49,24 @@ Student inputStudentManually() {
     Student student(name, surname, homeworkResults, examResult);
     return student;
 }
-
+/**
+ * @brief Computes the mean of values in a container.
+ * 
+ * @tparam Container A container type supporting begin() and end() iterators.
+ * @param results A container holding numeric values.
+ * @return The arithmetic mean of the numeric values.
+ */
 template <typename Container>
 double computeMean(const Container& results) {
     return std::accumulate(results.begin(), results.end(), 0.0) / results.size();
 }
 
+/**
+ * @brief Computes the median of a vector of integers.
+ * 
+ * @param results A vector of integers.
+ * @return The median value as a double.
+ */
 double computeMedian(const std::vector<int>& results) {
     size_t size = results.size();
     std::vector<int> sortedResults = results;
@@ -61,16 +78,32 @@ double computeMedian(const std::vector<int>& results) {
         return sortedResults[size / 2];
     }
 }
-
+/**
+ * @brief Checks if a score is in the valid range (1-10).
+ * 
+ * @param score The score to check.
+ * @return True if the score is valid, false otherwise.
+ */
 bool isValidScore(int score) {
     return score >= 1 && score <= 10;
 }
-
+/**
+ * @brief Checks if a file exists and is not empty.
+ * 
+ * @param filename The name of the file to check.
+ * @return True if the file exists and is not empty, false otherwise.
+ */
 bool fileExistsAndNotEmpty(const std::string& filename) {
     std::ifstream file(filename);
     return file.good() && file.peek() != std::ifstream::traits_type::eof();
 }
-
+/**
+ * @brief Writes student data to a specified file.
+ * 
+ * @tparam Container A container type of Student objects.
+ * @param students The container holding the students.
+ * @param filename The name of the file to write to.
+ */
 template <typename Container>
 void writeStudentsToFile(const Container& students, const std::string& filename) {
     std::ofstream out(filename);
@@ -79,13 +112,24 @@ void writeStudentsToFile(const Container& students, const std::string& filename)
         out << student.getName() << "," << student.getSurname() << "," << student.getFinalScore() << "\n";
     }
 }
-
+/**
+ * @brief Generates a random score within a specified range.
+ * 
+ * @param min The minimum score (inclusive).
+ * @param max The maximum score (inclusive).
+ * @return A random score within the specified range.
+ */
 int generateRandomScore(int min, int max) {
     static std::mt19937 rng(std::time(nullptr));
     std::uniform_int_distribution<int> dist(min, max);
     return dist(rng);
 }
-
+/**
+ * @brief Generates a file with random student data.
+ * 
+ * @param filename The name of the file to create.
+ * @param numRecords The number of student records to generate.
+ */
 void generateStudentFile(const std::string& filename, size_t numRecords) {
     std::ofstream outFile(filename);
 
@@ -111,7 +155,12 @@ void generateStudentFile(const std::string& filename, size_t numRecords) {
 
     outFile.close();
 }
-
+/**
+ * @brief Displays student information on standard output.
+ * 
+ * @tparam Container A container type of Student objects.
+ * @param students The container holding the students.
+ */
 template <typename Container>
 void displayStudents(const Container& students) {
     for (const auto& student : students) {
@@ -121,7 +170,15 @@ void displayStudents(const Container& students) {
                   << std::endl;
     }
 }
-
+/**
+ * @brief Processes students by reading from a file, sorting, and writing to files.
+ * 
+ * @tparam Container A container type of Student objects.
+ * @param students The container to store processed students.
+ * @param filename The name of the input file.
+ * @param strategy The strategy for processing students (e.g., sorting criteria).
+ * @param sortCriterion The criterion used for sorting (e.g., "name", "surname").
+ */
 template <typename Container>
 void processStudents(Container& students, const std::string& filename, int strategy, const std::string& sortCriterion) {
     // Start reading file
