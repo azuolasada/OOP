@@ -3,6 +3,16 @@
 #include <vector>
 #include "side_functions.h"
 
+/**
+ * @brief Main function of the application.
+ * 
+ * This program allows the user to choose between using a list or a vector container
+ * for Student objects. It supports different strategies for processing students,
+ * different methods for input (manual or from file), and different ways to display
+ * the results (on screen or to a file).
+ * 
+ * @return int Returns 0 on successful execution, 1 on error.
+ */
 int main() {
     try {
         char containerType, inputMethod, displayMethod;
