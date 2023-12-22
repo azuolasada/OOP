@@ -3,8 +3,8 @@
 CXX = g++
 CXXFLAGS = -Wall -std=c++17
 LDFLAGS = 
-OBJ = v1.5.o side_functions.o
-TARGET = v1.5
+OBJ = v2.0.o side_functions.o
+TARGET = v2.0
 
 all: $(TARGET)
 
