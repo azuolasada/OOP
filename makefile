@@ -3,23 +3,41 @@
 # Compiler settings
 CXX = g++                       # Specifies the C++ compiler
 CXXFLAGS = -Wall -std=c++17     # Compiler flags: Enable all warnings, use C++17 standard
-LDFLAGS =                       # Linker flags, if any needed
+
+# Google Test settings
+GTEST_DIR = /workspaces/OOP/googletest/googletest
+GTEST_INCLUDE = -I$(GTEST_DIR)/include      # Google Test include path
 
 # Project files
-OBJ = v2.0.o side_functions.o   # Object files to be generated
-TARGET = v2.0                   # Name of the final executable
+OBJ = side_functions.o   # Object files to be generated for the main application
+MAIN_OBJ = v2.0.o        # Object file for the main application
+TEST_OBJ = test.o        # Object file for the test
+TARGET = v2.0            # Name of the final executable for the main application
+TESTS = tests            # Name of the test executable
 
-# Rule for making the final target
-all: $(TARGET)
+# Rule for making the final target and tests
+all: $(TARGET) $(TESTS)
 
 # Rule to link the object files into the final executable
-$(TARGET): $(OBJ)
-	$(CXX) $(LDFLAGS) -o $@ $^   # $@ refers to the target, $^ refers to all dependencies
+$(TARGET): $(MAIN_OBJ) $(OBJ)
+	$(CXX) -o $@ $^
 
 # Rule for compiling source files into object files
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $<    # $< refers to the first dependency (the source file)
+	$(CXX) $(CXXFLAGS) -c $<
+
+# Test executable
+$(TESTS) : $(TEST_OBJ) $(OBJ)
+	$(CXX) $(GTEST_INCLUDE) -o $@ $^ -pthread -lgtest -lgtest_main
+
+# Compile main application object file
+v2.0.o: v2.0.cpp
+	$(CXX) $(CXXFLAGS) -c $<
+
+# Compile test object file
+test.o: test.cpp
+	$(CXX) $(CXXFLAGS) $(GTEST_INCLUDE) -c $<
 
 # Clean rule for removing compiled files
 clean:
-	rm -f $(OBJ) $(TARGET)      # Removes all object files and the final executable
+	rm -f $(OBJ) $(MAIN_OBJ) $(TEST_OBJ) $(TARGET) $(TESTS) *.o
