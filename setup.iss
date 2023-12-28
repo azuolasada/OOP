@@ -20,4 +20,4 @@ Name: "{commondesktop}\StudentSorter"; Filename: "{app}\v3.0.exe"; Tasks: deskto
 
 
 [Run]
-Filename: "{app}\v3.0.exe"; Description: "Launch StudentSorter"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\v3.0.exe"; Description: "Launch StudentSorter Program"; Flags: nowait postinstall skipifsilent
